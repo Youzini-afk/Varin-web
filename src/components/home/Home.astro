@@ -1,0 +1,33 @@
+---
+import Assurance from '~/components/home/Assurance.astro';
+import Bot from '~/components/home/Bot.astro';
+import Closing from '~/components/home/Closing.astro';
+import Extensions from '~/components/home/Extensions.astro';
+import Harness from '~/components/home/Harness.astro';
+import Hero from '~/components/home/Hero.astro';
+import Modes from '~/components/home/Modes.astro';
+import Ready from '~/components/home/Ready.astro';
+import Team from '~/components/home/Team.astro';
+import type { Locale } from '~/i18n';
+import Base from '~/layouts/Base.astro';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+---
+<Base locale={locale} path="/">
+  <Hero locale={locale} />
+  <Team locale={locale} />
+  <div class="rule"></div>
+  <Modes locale={locale} />
+  <div class="rule"></div>
+  <Bot locale={locale} />
+  <div class="rule"></div>
+  <Harness locale={locale} />
+  <div class="rule"></div>
+  <Ready locale={locale} />
+  <div class="rule"></div>
+  <Extensions locale={locale} />
+  <div class="rule"></div>
+  <Assurance locale={locale} />
+  <Closing locale={locale} />
+</Base>

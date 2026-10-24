@@ -1,0 +1,36 @@
+---
+import { AVATAR_EYE, AVATARS, MARK_PATHS, MARK_VIEWBOX, isAvatarRole } from '~/lib/brand';
+
+interface Props {
+  role: string;
+  size?: number;
+  class?: string;
+}
+const { role, size = 30, class: className } = Astro.props;
+const resolved = isAvatarRole(role) ? role : 'worker';
+const art = resolved === 'main' ? null : AVATARS[resolved];
+---
+<svg class:list={['avatar', className]} viewBox="0 0 64 64" width={size} height={size} aria-hidden="true" focusable="false">
+  {art ? (
+    <>
+      <path fill={art.color} d={art.body} />
+      <path fill={AVATAR_EYE} d={art.eyes} />
+      {'eyeStroke' in art && <path fill="none" stroke={AVATAR_EYE} stroke-width="4" stroke-linecap="round" d={art.eyeStroke} />}
+    </>
+  ) : (
+    <>
+      <circle class="lead-bg" cx="32" cy="32" r="32" />
+      <svg x="15" y="15" width="34" height="34" viewBox={MARK_VIEWBOX}>
+        <path class="lead-a" d={MARK_PATHS[0]} />
+        <path class="lead-b" d={MARK_PATHS[1]} />
+      </svg>
+    </>
+  )}
+</svg>
+
+<style>
+  .avatar { flex: none; }
+  .lead-bg { fill: var(--ink); }
+  .lead-a { fill: var(--on-ink); }
+  .lead-b { fill: var(--sage); }
+</style>

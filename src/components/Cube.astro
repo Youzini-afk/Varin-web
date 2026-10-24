@@ -1,0 +1,21 @@
+---
+/**
+ * The splash cube: the one real 3D object of the scene. Only its three visible faces exist, exactly as in
+ * the product. It must be placed inside a `.camera` (see scene.css) whose transform carries the tilt.
+ */
+import { CUBE_LEFT_CELLS, CUBE_RIGHT_CELLS, MARK_ON_CUBE_SCALE, MARK_PATHS, MARK_VIEWBOX } from '~/lib/brand';
+---
+<span class="markwrap">
+  <span class="mark3d">
+    <span class="face top">
+      <svg class="glyph" viewBox={MARK_VIEWBOX} aria-hidden="true" focusable="false">
+        <g transform={`scale(${MARK_ON_CUBE_SCALE})`}>
+          <path d={MARK_PATHS[0]} />
+          <path d={MARK_PATHS[1]} opacity="0.6" />
+        </g>
+      </svg>
+    </span>
+    <span class="face fx">{CUBE_RIGHT_CELLS.map((o) => <i style={`--o:${o}`}></i>)}</span>
+    <span class="face fy">{CUBE_LEFT_CELLS.map((o) => <i style={`--o:${o}`}></i>)}</span>
+  </span>
+</span>

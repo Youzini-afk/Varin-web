@@ -1,0 +1,326 @@
+---
+import { copyFor, type Locale } from '~/i18n';
+import { EXTENSION_EXAMPLES_URL, EXTENSION_GUIDE_URL } from '~/site';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = copyFor(locale).ext;
+
+/** Real built-in extension IDs from packages/extension-builtins and packages/extension-contract. */
+const catalogIds = [
+  'varin.builtin.agent-workspace',
+  'varin.builtin.ide-workbench',
+  'varin.builtin.research-workbench',
+  'varin.builtin.bot-workspace',
+  'varin.builtin.browser',
+  'varin.builtin.office',
+  'varin.builtin.computer',
+  'varin.builtin.language-servers',
+];
+const catalogIcons = ['agent', 'ide', 'research', 'bot', 'browser', 'office', 'computer', 'language'];
+const contracts = ['varin.models@1', 'varin.context.fragments@1', 'varin.context.budget@1', 'varin.context.compaction@1', 'varin.retrieval.plan@1', 'varin.agent.policy@4'];
+---
+<section class="section ext" id="extensions" aria-labelledby="ext-title" data-live>
+  <p class="kicker" data-reveal>{t.kicker}</p>
+  <h2 class="title" id="ext-title" data-reveal style="--d:60ms">{t.title}{t.subtitle && <small>{t.subtitle}</small>}</h2>
+  <p class="desc" data-reveal style="--d:120ms">{t.desc}</p>
+
+  <ul class="catalog" data-reveal style="--d:160ms" aria-label={t.catalogLabel}>
+    {t.catalog.map((item, index) => (
+      <li>
+        <span class="ci" aria-hidden="true">
+          <svg viewBox="0 0 24 24">
+            {catalogIcons[index] === 'agent' && <><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" /><path d="M9 4.5v15" /></>}
+            {catalogIcons[index] === 'ide' && <><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" /><path d="M8 4.5v15M8 14.5h12.5" /></>}
+            {catalogIcons[index] === 'research' && <><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" /><path d="M12 4.5v15" /></>}
+            {catalogIcons[index] === 'bot' && <><rect x="5" y="7" width="14" height="11" rx="3.5" /><path d="M12 7V4.5M9.5 12v1M14.5 12v1" /></>}
+            {catalogIcons[index] === 'browser' && <><circle cx="12" cy="12" r="8.5" /><path d="M3.5 12h17M12 3.5c2.4 2.4 3.5 5.2 3.5 8.5s-1.1 6.1-3.5 8.5c-2.4-2.4-3.5-5.2-3.5-8.5S9.6 5.9 12 3.5Z" /></>}
+            {catalogIcons[index] === 'office' && <><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20Z" /><path d="M14 3.5V8h4M10 13h4M10 16.5h4" /></>}
+            {catalogIcons[index] === 'computer' && <><rect x="3.5" y="4.5" width="17" height="11.5" rx="2" /><path d="M9 20h6M12 16v4" /></>}
+            {catalogIcons[index] === 'language' && <path d="M8.5 5C6 5 6 7 6 9s-1 3-2.5 3C5 12 6 13 6 15s0 4 2.5 4M15.5 5C18 5 18 7 18 9s1 3 2.5 3C19 12 18 13 18 15s0 4-2.5 4" />}
+          </svg>
+        </span>
+        <span class="cn"><b>{item.name}</b><code>{catalogIds[index]}</code></span>
+        <span class="meta"><em>{item.kind}</em><i class="on" aria-hidden="true"></i></span>
+      </li>
+    ))}
+  </ul>
+
+  <div class="sub" data-reveal><h3>{t.anatomy.title}</h3><p>{t.anatomy.hint}</p></div>
+  <div class="anatomy" data-reveal style="--d:80ms">
+    <input class="vh" type="radio" name="ext-code" id="ext-code-manifest" checked aria-label="varin.extension.json" />
+    <input class="vh" type="radio" name="ext-code" id="ext-code-host" aria-label="host.ts" />
+    <div class="card tree">
+      <div class="root">examples/extensions/agent-authored-panel/</div>
+      <div class="file">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20Z" /><path d="M14 3.5V8h4" /></svg>
+        <div>
+          <code>varin.extension.json</code>
+          <p>{t.anatomy.files.manifest}</p>
+          <div class="keys">
+            <span class="k-id" tabindex="0">{t.anatomy.keys.id}</span>
+            <span class="k-entry" tabindex="0">{t.anatomy.keys.entry}</span>
+            <span class="k-svc" tabindex="0">{t.anatomy.keys.svc}</span>
+            <span class="k-contrib" tabindex="0">{t.anatomy.keys.contrib}</span>
+          </div>
+        </div>
+      </div>
+      <div class="file">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 7.5 12 3.5l7.5 4v9L12 20.5l-7.5-4Z" /><path d="M4.5 7.5 12 11.5l7.5-4M12 11.5v9" /></svg>
+        <div><code>package.json</code><p>{t.anatomy.files.package}</p></div>
+      </div>
+      <div class="file k-host" tabindex="0">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="6.5" rx="1.8" /><rect x="4" y="13.5" width="16" height="6.5" rx="1.8" /><path d="M7.5 7.2h.1M7.5 16.7h.1" /></svg>
+        <div><code>host.js</code><p>{t.anatomy.files.host}</p></div>
+      </div>
+      <div class="file k-surface" tabindex="0">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2.5" /><path d="M14 4.5v15" /></svg>
+        <div><code>surface.cjs</code><p>{t.anatomy.files.surface}</p></div>
+      </div>
+      <div class="file">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3" /><circle cx="9.5" cy="9.5" r="1.8" /><path d="m20 15-4.5-4.5L6 20" /></svg>
+        <div><code>panel.css · panel.svg</code><p>{t.anatomy.files.assets}</p></div>
+      </div>
+    </div>
+
+    <div class="code">
+      <div class="tabs" role="radiogroup" aria-label={t.anatomy.tabs}>
+        <label for="ext-code-manifest">varin.extension.json</label>
+        <label for="ext-code-host">host.ts</label>
+      </div>
+      <pre class="p-manifest" tabindex="0"><span>{'{'}</span>
+<span class="l-id">  <i class="n">"schemaVersion"</i>: <i class="v">1</i>,</span>
+<span class="l-id">  <i class="n">"id"</i>: <i class="s">"example.agent-authored-panel"</i>,</span>
+<span class="l-id">  <i class="n">"version"</i>: <i class="s">"1.0.0"</i>,</span>
+<span class="l-id">  <i class="n">"engines"</i>: {'{'} <i class="n">"varin"</i>: <i class="s">"*"</i> {'}'},</span>
+<span class="l-entry">  <i class="n">"entrypoints"</i>: {'{'}</span>
+<span class="l-entry l-host">    <i class="n">"host"</i>: {'{'} <i class="n">"file"</i>: <i class="s">"host.js"</i>, <i class="n">"mode"</i>: <i class="s">"brokered"</i>,</span>
+<span class="l-entry l-host">              <i class="n">"activation"</i>: [<i class="s">"service-request"</i>] {'}'},</span>
+<span class="l-entry l-surface">    <i class="n">"surfaces"</i>: [{'{'} <i class="n">"id"</i>: <i class="s">"panel"</i>, <i class="n">"file"</i>: <i class="s">"surface.cjs"</i>, <i class="n">"mode"</i>: <i class="s">"managed"</i>,</span>
+<span class="l-entry l-surface">      <i class="n">"supports"</i>: [<i class="s">"web"</i>, <i class="s">"desktop"</i>], <i class="n">"activation"</i>: [<i class="s">"application-startup"</i>] {'}'}]</span>
+<span class="l-entry">  {'}'},</span>
+<span class="l-svc">  <i class="n">"provides"</i>: {'{'} <i class="n">"services"</i>: [{'{'}</span>
+<span class="l-svc">    <i class="n">"id"</i>: <i class="s">"example.agent-authored-panel.count"</i>, <i class="n">"version"</i>: <i class="v">1</i>,</span>
+<span class="l-svc">    <i class="n">"tool"</i>: {'{'} <i class="n">"name"</i>: <i class="s">"authored_text_count"</i>, <i class="n">"completion"</i>: <i class="s">"result"</i>,</span>
+<span class="l-svc">              <i class="n">"operation"</i>: <i class="s">"read"</i>, <i class="n">"inputSchema"</i>: <i class="p">{'{ … }'}</i> {'}'}</span>
+<span class="l-svc">  {'}'}] {'}'},</span>
+<span class="l-contrib">  <i class="n">"contributions"</i>: [{'{'}</span>
+<span class="l-contrib">    <i class="n">"id"</i>: <i class="s">"example.agent-authored-panel.summary"</i>, <i class="n">"kind"</i>: <i class="s">"panel"</i>,</span>
+<span class="l-contrib">    <i class="n">"entrypoint"</i>: <i class="s">"panel"</i>, <i class="n">"supports"</i>: [<i class="s">"web"</i>, <i class="s">"desktop"</i>],</span>
+<span class="l-contrib">    <i class="n">"placement"</i>: {'{'} <i class="n">"slot"</i>: <i class="s">"workbench.secondary.after"</i>, <i class="n">"order"</i>: <i class="v">20</i> {'}'}</span>
+<span class="l-contrib">  {'}'}]</span>
+<span>{'}'}</span></pre>
+      <pre class="p-host" tabindex="0"><span><i class="k">import</i> {'{'} defineHostExtension, provideTool {'}'} <i class="k">from</i> <i class="s">'@varin/extension-sdk'</i>;</span>
+<span><i class="k">import</i> manifest <i class="k">from</i> <i class="s">'./varin.extension.json'</i> <i class="k">with</i> {'{'} type: <i class="s">'json'</i> {'}'};</span>
+<span> </span>
+<span><i class="k">export default</i> <i class="f">defineHostExtension</i>({'{'}</span>
+<span>  <i class="f">activate</i>(context) {'{'}</span>
+<span>    <i class="c">// {t.anatomy.hostComments[0]}</i></span>
+<span>    <i class="f">provideTool</i>(context, manifest.provides.services[<i class="v">0</i>], <i class="k">async</i> (input, call) <i class="p">=&gt;</i> {'{'}</span>
+<span>      <i class="c">// {t.anatomy.hostComments[1]}</i></span>
+<span>      <i class="k">const</i> memory = <i class="k">await</i> call.tools.<i class="f">invoke</i>({'{'}</span>
+<span>        callId: <i class="s">'memory'</i>, name: <i class="s">'memory'</i>, arguments: input.memory,</span>
+<span>      {'}'});</span>
+<span>      <i class="k">return</i> {'{'} memory {'}'};</span>
+<span>    {'}'});</span>
+<span>  {'}'},</span>
+<span>{'}'});</span></pre>
+      <p class="caption">{t.anatomy.caption}</p>
+    </div>
+  </div>
+
+  <div class="sub" data-reveal><h3>{t.layers.title}</h3><p>{t.layers.hint}</p></div>
+  <div class="layers">
+    <div class="card realms" data-reveal style="--d:80ms">
+      <div class="wire" aria-hidden="true"><i></i><i></i></div>
+      {t.layers.realms.map((realm) => (
+        <div class="realm">
+          <h4>{realm.name}<small>{realm.tag}</small></h4>
+          <div><p>{realm.body}</p><div class="chips">{realm.chips.map((chip) => <span>{chip}</span>)}</div></div>
+        </div>
+      ))}
+    </div>
+    <div class="card points" data-reveal style="--d:150ms">
+      <div><h4>{t.layers.ui.title}<span>{t.layers.ui.note}</span></h4><div class="cloud">{t.layers.ui.items.map((item) => <span>{item}</span>)}</div></div>
+      <div><h4>{t.layers.agent.title}<span>{t.layers.agent.note}</span></h4><div class="cloud"><span>{t.layers.agent.lead}</span>{contracts.map((id) => <span><code>{id}</code></span>)}<span>{t.layers.agent.tail}</span></div></div>
+      <div><h4>{t.layers.workspace.title}<span>{t.layers.workspace.note}</span></h4><div class="cloud">{t.layers.workspace.items.map((item) => <span>{item}</span>)}</div></div>
+    </div>
+  </div>
+
+  <div class="sub" data-reveal><h3>{t.why.title}</h3><p>{t.why.hint}</p></div>
+  <div class="whys">
+    {t.why.items.map((item, index) => (
+      <article class="card why" data-reveal style={`--d:${80 + (index % 3) * 70}ms`}>
+        <div class="viz" aria-hidden="true">
+          {index === 0 && <div class="v-doc"><i></i><i></i><i></i><i></i></div>}
+          {index === 1 && <div class="v-grants">{t.why.grants.map((grant, g) => <div class:list={{ pending: g === t.why.grants.length - 1 }}>{grant}<i class="sw2"></i></div>)}</div>}
+          {index === 2 && <div class="v-atomic"><i></i><i></i><i></i></div>}
+          {index === 3 && <div class="v-lanes"><div class="v1" data-v="v1"><i></i></div><div class="v2" data-v="v2"><i></i><i></i></div></div>}
+          {index === 4 && <div class="v-procs"><i></i><i class="crash"></i><i></i></div>}
+          {index === 5 && <div class="v-agent"><span class="pkg">{t.why.pkg}<i class="tg"></i></span><span class="lbl"><span class="off">{t.why.off}</span><span class="onl">{t.why.on}</span></span></div>}
+        </div>
+        <h4>{item.title}</h4>
+        <p>{item.body}</p>
+      </article>
+    ))}
+  </div>
+  <div class="foot" data-reveal>
+    {t.foot.items.map((item) => <span>{item}</span>)}
+    <em>{t.foot.note}</em>
+    <a href={EXTENSION_GUIDE_URL}>{t.foot.guide} →</a>
+    <a href={EXTENSION_EXAMPLES_URL}>{t.foot.examples} →</a>
+  </div>
+</section>
+
+<style>
+  .catalog { list-style: none; margin: 44px 0 0; padding: 1px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1px; overflow: hidden; border-radius: 18px; background: var(--hair); }
+  .catalog li { display: grid; grid-template-columns: 34px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 13px 16px; background: var(--card); transition: background-color var(--t-fast) var(--ease); }
+  .catalog li:hover { background: var(--elev); }
+  .ci { width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: var(--paper-deep); }
+  .ci svg { width: 18px; height: 18px; fill: none; stroke: var(--ink); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .cn b { display: block; font-size: 13.5px; }
+  .cn code { font-family: var(--mono); font-size: 11.5px; color: var(--muted); overflow-wrap: anywhere; }
+  .meta { display: flex; align-items: center; gap: 10px; font-size: 11.5px; color: var(--muted); }
+  .meta em { padding: 2px 8px; border-radius: 6px; background: var(--paper-deep); font-style: normal; }
+  .on { position: relative; width: 30px; height: 18px; border-radius: 999px; background: var(--ink); }
+  .on::after { content: ""; position: absolute; right: 3px; top: 3px; width: 12px; height: 12px; border-radius: 50%; background: var(--paper); }
+
+  .sub { margin: 72px 0 20px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 14px; }
+  .sub h3 { margin: 0; font-size: 20px; letter-spacing: -0.02em; }
+  .sub p { margin: 0; font-size: 13.5px; color: var(--muted); }
+
+  .anatomy { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: 16px; }
+  .tree { padding: 18px; display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+  .root { padding: 4px 10px 10px; font-family: var(--mono); font-size: 12.5px; color: var(--muted); }
+  .file { display: grid; grid-template-columns: 20px minmax(0, 1fr); gap: 10px; padding: 10px; border-radius: 12px; transition: background-color var(--t-fast) var(--ease); }
+  .file:hover, .file:focus-visible { background: var(--hl); }
+  .file svg { width: 18px; height: 18px; margin-top: 1px; fill: none; stroke: var(--muted); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+  .file code { font-family: var(--mono); font-size: 12.5px; }
+  .file p { margin: 3px 0 0; font-size: 12.5px; line-height: 1.6; color: var(--muted); }
+  .keys { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 7px; }
+  .keys span { padding: 2px 8px; border-radius: 6px; background: var(--paper-deep); font-size: 11.5px; cursor: default; transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease); }
+  .keys span:hover, .keys span:focus-visible { background: var(--ink); color: var(--on-ink); }
+
+  .code { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--radius-card); background: var(--code); color: #ededed; box-shadow: 0 26px 60px -36px var(--shadow); }
+  .tabs { display: flex; gap: 4px; padding: 10px 12px; background: rgba(255, 255, 255, 0.04); border-bottom: 1px solid rgba(255, 255, 255, 0.06); }
+  .tabs label { padding: 5px 10px; border-radius: 7px; font-family: var(--mono); font-size: 11.5px; color: #a5a5a5; cursor: pointer; transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease); }
+  .tabs label:hover { color: #ededed; }
+  .anatomy:has(#ext-code-manifest:checked) label[for='ext-code-manifest'],
+  .anatomy:has(#ext-code-host:checked) label[for='ext-code-host'] { background: rgba(255, 255, 255, 0.1); color: #ededed; }
+  .anatomy:has(#ext-code-manifest:focus-visible) label[for='ext-code-manifest'],
+  .anatomy:has(#ext-code-host:focus-visible) label[for='ext-code-host'] { outline: 2px solid rgba(237, 237, 237, 0.6); outline-offset: 1px; }
+  /* Ligatures off: code samples show the characters an author actually types. */
+  pre { display: none; margin: 0; padding: 16px 0; overflow: auto; font-family: var(--mono); font-size: 12px; line-height: 1.75; white-space: normal; font-variant-ligatures: none; }
+  pre > span { display: block; padding: 0 18px; border-left: 2px solid transparent; white-space: pre; transition: background-color var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease); }
+  .anatomy:has(#ext-code-manifest:checked) .p-manifest,
+  .anatomy:has(#ext-code-host:checked) .p-host { display: block; }
+  pre i { font-style: normal; }
+  .k { color: #6fbf73; } .s { color: #d58373; } .f { color: #a3c47a; } .c { color: #7f8f7f; } .p { color: #908b7e; } .n { color: #79b8c9; } .v { color: #a3c47a; }
+  .anatomy:has(.k-id:is(:hover, :focus-visible)) .l-id,
+  .anatomy:has(.k-entry:is(:hover, :focus-visible)) .l-entry,
+  .anatomy:has(.k-host:is(:hover, :focus-visible)) .l-host,
+  .anatomy:has(.k-surface:is(:hover, :focus-visible)) .l-surface,
+  .anatomy:has(.k-svc:is(:hover, :focus-visible)) .l-svc,
+  .anatomy:has(.k-contrib:is(:hover, :focus-visible)) .l-contrib { background: rgba(142, 150, 148, 0.16); border-left-color: #8e9694; }
+  .caption { margin: auto 0 0; padding: 10px 18px 14px; font-size: 11.5px; color: #8b8b8b; }
+
+  .layers { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 16px; }
+  .realms { position: relative; padding: 20px; display: flex; flex-direction: column; gap: 10px; }
+  .realm { position: relative; z-index: 1; display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 16px; padding: 16px 18px; border-radius: 14px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
+  .realm h4 { margin: 0; font-size: 14px; }
+  .realm h4 small { display: block; margin-top: 3px; font-family: var(--mono); font-size: 10.5px; font-weight: 500; letter-spacing: 0.06em; color: var(--sage); }
+  .realm p { margin: 0; font-size: 12.5px; line-height: 1.65; color: var(--muted); }
+  .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; }
+  .chips span { padding: 2px 8px; border-radius: 6px; background: var(--paper-deep); font-size: 11px; }
+  .wire { position: absolute; left: 86px; top: 40px; bottom: 40px; width: 1px; background: var(--line); }
+  .wire i { position: absolute; left: -3px; width: 7px; height: 7px; border-radius: 2px; background: var(--sage); animation: packet 4.8s var(--ease) infinite; }
+  .wire i + i { animation-delay: 2.4s; }
+  @keyframes packet { 0% { top: 0; opacity: 0; } 8% { opacity: 1; } 45% { top: 100%; opacity: 1; } 50%, 100% { top: 100%; opacity: 0; } }
+  .points { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+  .points h4 { margin: 0 0 9px; display: flex; justify-content: space-between; font-size: 13px; }
+  .points h4 span { font-size: 12px; font-weight: 400; color: var(--muted); }
+  .cloud { display: flex; flex-wrap: wrap; gap: 6px; }
+  .cloud span { padding: 4px 9px; border-radius: 8px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); font-size: 12px; transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease); }
+  .cloud span:hover { background: var(--ink); color: var(--on-ink); }
+  .cloud code { font-family: var(--mono); font-size: 11.5px; }
+
+  .whys { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+  .why { padding: 22px; display: flex; flex-direction: column; gap: 10px; }
+  .why h4 { margin: 0; font-size: 15.5px; letter-spacing: -0.01em; }
+  .why p { margin: 0; font-size: 13px; line-height: 1.75; color: var(--muted); }
+  .viz { position: relative; height: 96px; margin-bottom: 6px; overflow: hidden; border-radius: 12px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
+
+  .v-doc { position: absolute; left: 50%; top: 14px; width: 54px; height: 68px; translate: -50% 0; display: flex; flex-direction: column; gap: 6px; padding: 10px 9px; border-radius: 6px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .v-doc i { height: 4px; border-radius: 2px; background: var(--line); }
+  .v-doc i:nth-child(2) { width: 70%; }
+  .v-doc i:nth-child(4) { width: 55%; }
+  .v-doc::after { content: ""; position: absolute; left: -10px; right: -10px; top: 0; height: 2px; background: var(--sage); box-shadow: 0 0 10px var(--sage); animation: scan 3s var(--ease) infinite; }
+  @keyframes scan { 0% { top: 0; opacity: 0; } 10% { opacity: 1; } 80% { top: 100%; opacity: 1; } 100% { top: 100%; opacity: 0; } }
+
+  .v-grants { position: absolute; inset: 12px 18px; display: flex; flex-direction: column; justify-content: center; gap: 7px; font-size: 11.5px; }
+  .v-grants div { display: flex; align-items: center; justify-content: space-between; }
+  .sw2 { position: relative; width: 26px; height: 15px; border-radius: 999px; background: var(--ink); }
+  .sw2::after { content: ""; position: absolute; right: 2.5px; top: 2.5px; width: 10px; height: 10px; border-radius: 50%; background: var(--paper); }
+  .pending { color: var(--warn); animation: blink 1.6s steps(1) infinite; }
+  .pending .sw2 { background: var(--line); }
+  .pending .sw2::after { right: auto; left: 2.5px; }
+  @keyframes blink { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0.35; } }
+
+  .v-atomic { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 8px; }
+  .v-atomic i { width: 34px; height: 34px; border-radius: 8px; box-shadow: inset 0 0 0 1.5px var(--ink); background: var(--ink); animation: 4.8s var(--ease) infinite both; }
+  .v-atomic i:nth-child(1) { animation-name: stage1; }
+  .v-atomic i:nth-child(2) { animation-name: stage2; }
+  .v-atomic i:nth-child(3) { animation-name: stage3; }
+  /* Three pieces are staged one by one (outlined), then published at the same instant (solid). */
+  @keyframes stage1 { 0% { opacity: 0; transform: translateY(8px); background: transparent; box-shadow: inset 0 0 0 1.5px var(--sage); } 8%, 52% { opacity: 1; transform: none; background: transparent; box-shadow: inset 0 0 0 1.5px var(--sage); } 58%, 90% { opacity: 1; background: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); } 100% { opacity: 0; } }
+  @keyframes stage2 { 0%, 14% { opacity: 0; transform: translateY(8px); background: transparent; box-shadow: inset 0 0 0 1.5px var(--sage); } 22%, 52% { opacity: 1; transform: none; background: transparent; box-shadow: inset 0 0 0 1.5px var(--sage); } 58%, 90% { opacity: 1; background: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); } 100% { opacity: 0; } }
+  @keyframes stage3 { 0%, 28% { opacity: 0; transform: translateY(8px); background: transparent; box-shadow: inset 0 0 0 1.5px var(--sage); } 36%, 52% { opacity: 1; transform: none; background: transparent; box-shadow: inset 0 0 0 1.5px var(--sage); } 58%, 90% { opacity: 1; background: var(--ink); box-shadow: inset 0 0 0 1.5px var(--ink); } 100% { opacity: 0; } }
+
+  .v-lanes { position: absolute; inset: 18px; display: flex; flex-direction: column; justify-content: center; gap: 22px; font-family: var(--mono); font-size: 10.5px; color: var(--muted); }
+  .v-lanes div { position: relative; height: 1px; margin-left: 26px; background: var(--line); }
+  .v-lanes div::before { content: attr(data-v); position: absolute; left: -26px; top: -7px; }
+  .v-lanes div i { position: absolute; top: -4px; left: 0; width: 9px; height: 9px; border-radius: 50%; background: var(--ink); }
+  .v1 i { animation: run-long 6s linear infinite; }
+  .v2 i { background: var(--sage); animation: run-new 6s linear infinite; }
+  .v2 i + i { animation-delay: 1s; }
+  @keyframes run-long { 0% { left: 0; opacity: 1; } 85% { left: calc(100% - 9px); opacity: 1; } 92%, 100% { left: calc(100% - 9px); opacity: 0; } }
+  @keyframes run-new { 0%, 30% { left: 0; opacity: 0; } 34% { opacity: 1; } 70% { left: calc(100% - 9px); opacity: 1; } 75%, 100% { left: calc(100% - 9px); opacity: 0; } }
+
+  .v-procs { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  .v-procs i { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 10px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); }
+  .v-procs i::after { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--ok); }
+  .crash { animation: crash 5s var(--ease) infinite; }
+  .v-procs .crash::after { animation: crash-dot 5s steps(1) infinite; }
+  @keyframes crash { 0%, 30% { transform: none; opacity: 1; } 34% { transform: translateX(-2px); } 38% { transform: translateX(2px); } 42% { transform: none; opacity: 0.35; } 70% { opacity: 0.35; transform: scale(0.9); } 80%, 100% { opacity: 1; transform: none; } }
+  @keyframes crash-dot { 0%, 34% { background: var(--ok); } 35%, 75% { background: var(--err); } 76%, 100% { background: var(--ok); } }
+
+  .v-agent { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 11.5px; }
+  .pkg { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; background: var(--card); box-shadow: inset 0 0 0 1px var(--line); animation: drop-in 6s var(--ease) infinite; }
+  @keyframes drop-in { 0% { transform: translateY(-40px); opacity: 0; } 12%, 100% { transform: none; opacity: 1; } }
+  .tg { position: relative; width: 28px; height: 16px; border-radius: 999px; background: var(--line); animation: approve 6s var(--ease) infinite; }
+  .tg::after { content: ""; position: absolute; left: 2.5px; top: 2.5px; width: 11px; height: 11px; border-radius: 50%; background: #fff; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.25); animation: approve-dot 6s var(--ease) infinite; }
+  @keyframes approve { 0%, 62% { background: var(--line); } 68%, 100% { background: var(--ink); } }
+  @keyframes approve-dot { 0%, 62% { transform: none; } 68%, 100% { transform: translateX(12px); } }
+  .lbl { position: relative; min-width: 9em; height: 16px; }
+  .lbl span { position: absolute; inset: 0; white-space: nowrap; }
+  .off { color: var(--warn); animation: lbl-off 6s steps(1) infinite; }
+  .onl { color: var(--ok); opacity: 0; animation: lbl-on 6s steps(1) infinite; }
+  @keyframes lbl-off { 0%, 65% { opacity: 1; } 66%, 100% { opacity: 0; } }
+  @keyframes lbl-on { 0%, 65% { opacity: 0; } 66%, 100% { opacity: 1; } }
+
+  .foot { margin-top: 24px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 12.5px; color: var(--muted); }
+  .foot span { padding: 6px 12px; border-radius: 999px; background: var(--card); box-shadow: inset 0 0 0 1px var(--hair); color: var(--ink); }
+  .foot em { font-style: normal; margin: 0 6px; }
+  .foot a { color: var(--ink); font-weight: 500; margin-right: 8px; transition: color var(--t-fast) var(--ease); }
+  .foot a:hover { color: var(--sage); }
+
+  @media (max-width: 1080px) {
+    .anatomy, .layers { grid-template-columns: 1fr; }
+    .whys { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 760px) {
+    .catalog, .whys { grid-template-columns: 1fr; }
+    .realm { grid-template-columns: 1fr; gap: 6px; }
+    .wire { display: none; }
+  }
+</style>

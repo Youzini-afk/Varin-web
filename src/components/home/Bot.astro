@@ -1,0 +1,187 @@
+---
+import Mark from '~/components/Mark.astro';
+import { copyFor, type Locale } from '~/i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = copyFor(locale).bot;
+---
+<section class="section split" id="bot" aria-labelledby="bot-title" data-live>
+  <div>
+    <p class="kicker" data-reveal>{t.kicker}</p>
+    <h2 class="title" id="bot-title" data-reveal style="--d:60ms">{t.title}{t.subtitle && <small>{t.subtitle}</small>}</h2>
+    <p class="desc" data-reveal style="--d:120ms">{t.desc}</p>
+    <ul class="feats" data-reveal style="--d:180ms">{t.feats.map((feat) => <li>{feat}</li>)}</ul>
+  </div>
+
+  <div class="card botcard" data-reveal style="--d:120ms" data-bot-demo>
+    <input class="vh" type="radio" name="bot-state" id="bot-awake" value="awake" checked />
+    <input class="vh" type="radio" name="bot-state" id="bot-sleep" value="sleep" />
+    <input class="vh" type="radio" name="bot-state" id="bot-wake" value="wake" />
+    <div class="states" role="radiogroup" aria-label={t.states.label}>
+      <label for="bot-awake"><i></i>{t.states.awake}</label>
+      <label for="bot-sleep"><i></i>{t.states.sleep}</label>
+      <label for="bot-wake"><i></i>{t.states.wake}</label>
+    </div>
+
+    <div class="stage" aria-hidden="true">
+      <svg class="bot" viewBox="0 0 240 230">
+        <ellipse class="shadow" cx="120" cy="216" rx="52" ry="7" />
+        <g class="float">
+          <path class="stem" d="M120 50V33" />
+          <circle class="glow" cx="120" cy="25" r="14" />
+          <circle class="bulb" cx="120" cy="25" r="7.5" />
+          <rect class="ear" x="39" y="86" width="17" height="36" rx="8.5" />
+          <rect class="ear" x="184" y="86" width="17" height="36" rx="8.5" />
+          <rect class="arm" x="62" y="168" width="15" height="27" rx="7.5" />
+          <rect class="arm arm-r" x="163" y="168" width="15" height="27" rx="7.5" />
+          <rect class="neck" x="108" y="150" width="24" height="16" rx="4" />
+          <rect class="shell" x="76" y="161" width="88" height="42" rx="17" />
+          <svg class="chest" x="106" y="168" width="28" height="28" viewBox="0 0 28 28"><Mark class="chest-mark" /></svg>
+          <rect class="shell" x="52" y="48" width="136" height="110" rx="38" />
+          <rect class="visor" x="68" y="64" width="104" height="68" rx="25" />
+          <g class="eyes"><rect class="eye" x="95" y="86" width="15" height="24" rx="7.5" /><rect class="eye" x="130" y="86" width="15" height="24" rx="7.5" /></g>
+          <path class="rest" d="M93 100Q102.5 109 112 100M128 100Q137.5 109 147 100" />
+          <circle class="cheek" cx="80" cy="145" r="6" /><circle class="cheek" cx="160" cy="145" r="6" />
+        </g>
+        <g class="zz"><text x="178" y="60">z</text><text x="192" y="42">z</text><text x="204" y="26">z</text></g>
+      </svg>
+    </div>
+
+    <div class="profile">{t.profile.map((item) => <span>{item.label}<b>{item.value}</b></span>)}</div>
+    <ul class="works">
+      {t.works.map((work, index) => (
+        <li>
+          {work.title}
+          <span class="st">
+            <b class:list={['s-awake', { 's-ask': work.ask }]}>{work.awake}</b>
+            <b class="s-sleep">{t.status.sleep}</b>
+            <b class="s-wake">{t.status.wake}</b>
+          </span>
+          {!work.ask && <i style={`--d:${-2 - index * 4}s`}></i>}
+        </li>
+      ))}
+    </ul>
+    <div class="mem">{t.memory.map((item) => <span>{item}<em>{t.fix}</em><em>{t.forget}</em></span>)}</div>
+  </div>
+</section>
+
+<script>
+  import { prefersReducedMotion } from '~/lib/motion/preferences';
+
+  // Walk through the three states on its own until the visitor picks one.
+  const demo = document.querySelector<HTMLElement>('[data-bot-demo]');
+  if (demo && !prefersReducedMotion()) {
+    const order = [['bot-awake', 6000], ['bot-sleep', 4600], ['bot-wake', 2400]] as const;
+    let step = 0;
+    let timer = 0;
+    let stopped = false;
+    const schedule = (): void => {
+      window.clearTimeout(timer);
+      if (stopped) return;
+      timer = window.setTimeout(() => {
+        if (!demo.closest('.is-live')) return schedule();
+        step = (step + 1) % order.length;
+        const input = document.getElementById(order[step]![0]) as HTMLInputElement | null;
+        if (input) input.checked = true;
+        schedule();
+      }, order[step]![1]);
+    };
+    demo.addEventListener('pointerdown', () => { stopped = true; window.clearTimeout(timer); }, { once: true });
+    demo.addEventListener('keydown', () => { stopped = true; window.clearTimeout(timer); }, { once: true });
+    schedule();
+  }
+</script>
+
+<style>
+  .botcard { padding: 22px; display: flex; flex-direction: column; gap: 18px; }
+  .states { align-self: center; display: inline-flex; padding: 3px; gap: 2px; border-radius: 12px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); }
+  .states label { display: inline-flex; align-items: center; gap: 7px; padding: 7px 14px; border-radius: 9px; font-size: 13px; color: var(--muted); cursor: pointer; transition: background-color var(--t-normal) var(--ease), color var(--t-normal) var(--ease); }
+  .states label:hover { color: var(--ink); }
+  .states i { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .botcard:has(#bot-awake:checked) label[for='bot-awake'],
+  .botcard:has(#bot-sleep:checked) label[for='bot-sleep'],
+  .botcard:has(#bot-wake:checked) label[for='bot-wake'] { background: var(--ink); color: var(--on-ink); }
+  .botcard:has(#bot-awake:checked) label[for='bot-awake'] i { background: var(--ok); }
+  .botcard:has(#bot-awake:focus-visible) label[for='bot-awake'],
+  .botcard:has(#bot-sleep:focus-visible) label[for='bot-sleep'],
+  .botcard:has(#bot-wake:focus-visible) label[for='bot-wake'] { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+  .stage {
+    position: relative;
+    height: 270px;
+    overflow: hidden;
+    border-radius: 16px;
+    background:
+      radial-gradient(ellipse 60% 70% at 50% 60%, var(--paper-deep), transparent 72%),
+      repeating-linear-gradient(90deg, var(--hair) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(0deg, var(--hair) 0 1px, transparent 1px 32px);
+  }
+  .stage::after { content: ""; position: absolute; inset: 0; background: var(--ink); opacity: 0; pointer-events: none; transition: opacity 0.8s var(--ease); }
+  .botcard:has(#bot-sleep:checked) .stage::after { opacity: 0.05; }
+
+  .bot { position: absolute; left: 50%; top: 50%; width: 250px; translate: -50% -48%; }
+  .bot * { transform-box: fill-box; transform-origin: center; }
+  .stem { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; }
+  .shell { fill: var(--shell); stroke: var(--ink); stroke-width: 3.2; }
+  .ear, .arm { fill: var(--sage); stroke: var(--ink); stroke-width: 3; }
+  .neck { fill: var(--ink); }
+  .visor { fill: var(--visor); transition: fill 0.8s var(--ease); }
+  .cheek { fill: var(--sage); opacity: 0.4; }
+  .eye { fill: var(--eye); animation: blink 4.6s infinite; }
+  .rest { fill: none; stroke: var(--eye); stroke-width: 4.5; stroke-linecap: round; opacity: 0; transition: opacity 0.4s var(--ease); }
+  .eyes { transform-box: view-box; animation: look 7s var(--ease) infinite; transition: opacity 0.3s var(--ease); }
+  .bulb { fill: var(--sage); stroke: var(--ink); stroke-width: 3; transition: fill 0.6s var(--ease); }
+  .glow { fill: var(--sage); opacity: 0.3; animation: glow 2.2s ease-in-out infinite; }
+  .chest :global(.chest-mark) { --mark-a: var(--ink); }
+  .shadow { fill: var(--ink); opacity: 0.1; animation: shadow 3.2s ease-in-out infinite; }
+  .float { transform-box: view-box; animation: float 3.2s ease-in-out infinite; }
+  .arm-r { transform-origin: 50% 12%; animation: wave 6s var(--ease) infinite; }
+  .zz { fill: var(--sage); font: 700 18px var(--sans); opacity: 0; transition: opacity 0.4s var(--ease); }
+  .zz text { animation: zz 3s ease-in infinite; }
+  .zz text:nth-child(2) { animation-delay: 1s; font-size: 14px; }
+  .zz text:nth-child(3) { animation-delay: 2s; font-size: 11px; }
+  @keyframes glow { 0%, 100% { opacity: 0.12; transform: scale(0.8); } 50% { opacity: 0.42; transform: scale(1.15); } }
+  @keyframes shadow { 0%, 100% { transform: scaleX(1); } 50% { transform: scaleX(0.86); opacity: 0.07; } }
+  @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes blink { 0%, 44%, 50%, 100% { transform: scaleY(1); } 47% { transform: scaleY(0.12); } }
+  @keyframes look { 0%, 30%, 100% { transform: none; } 38%, 58% { transform: translateX(-5px); } 66%, 86% { transform: translateX(5px); } }
+  @keyframes wave { 0%, 70%, 100% { transform: none; } 76%, 88% { transform: rotate(-38deg); } 82% { transform: rotate(-22deg); } }
+  @keyframes zz { 0% { opacity: 0; transform: translate(0, 6px); } 30% { opacity: 1; } 100% { opacity: 0; transform: translate(10px, -18px); } }
+
+  .botcard:has(#bot-sleep:checked) .eyes { opacity: 0; }
+  .botcard:has(#bot-sleep:checked) .rest { opacity: 1; }
+  .botcard:has(#bot-sleep:checked) .zz { opacity: 1; }
+  .botcard:has(#bot-sleep:checked) .visor { fill: var(--visor-sleep); }
+  .botcard:has(#bot-sleep:checked) .bulb { fill: var(--paper-deep); }
+  .botcard:has(#bot-sleep:checked) .glow { animation: none; opacity: 0; }
+  .botcard:has(#bot-sleep:checked) .float { animation: float-sleep 6s ease-in-out infinite; }
+  .botcard:has(#bot-sleep:checked) .arm-r { animation: none; }
+  @keyframes float-sleep { 0%, 100% { transform: translateY(5px); } 50% { transform: translateY(2px); } }
+  .botcard:has(#bot-wake:checked) .eye { animation: wake-eye 1.6s var(--ease) infinite; }
+  .botcard:has(#bot-wake:checked) .glow { animation-duration: 0.7s; }
+  .botcard:has(#bot-wake:checked) .eyes { animation: none; }
+  @keyframes wake-eye { 0% { transform: scaleY(0.15); } 30% { transform: scaleY(0.6); } 40% { transform: scaleY(0.2); } 70%, 100% { transform: scaleY(1); } }
+
+  .profile { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12.5px; }
+  .profile span { padding: 5px 10px; border-radius: 9px; background: var(--paper-deep); color: var(--muted); }
+  .profile b { margin-left: 4px; color: var(--ink); font-weight: 600; }
+  .works { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+  .works li { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 14px; overflow: hidden; border-radius: 12px; background: var(--paper); box-shadow: inset 0 0 0 1px var(--hair); font-size: 13.5px; }
+  .works i { position: absolute; left: 0; bottom: 0; width: 100%; height: 2px; background: var(--sage); transform-origin: left; transform: scaleX(0.4); animation: progress 9s var(--d, 0s) linear infinite; }
+  @keyframes progress { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  .st { font-size: 12px; }
+  .st b { display: none; font-weight: 500; }
+  .botcard:has(#bot-awake:checked) .s-awake,
+  .botcard:has(#bot-sleep:checked) .s-sleep,
+  .botcard:has(#bot-wake:checked) .s-wake { display: inline; }
+  .s-awake { color: var(--ok); }
+  .s-awake.s-ask { color: var(--warn); }
+  .s-sleep { color: var(--muted); }
+  .s-wake { color: var(--sage); }
+  .botcard:has(#bot-sleep:checked) .works i { animation-play-state: paused; opacity: 0.4; }
+  .botcard:has(#bot-wake:checked) .works i { animation-duration: 2.4s; }
+  .mem { display: flex; flex-wrap: wrap; gap: 8px; }
+  .mem span { display: inline-flex; align-items: center; gap: 8px; padding: 6px 6px 6px 11px; border-radius: 10px; box-shadow: inset 0 0 0 1px var(--hair); font-size: 12.5px; }
+  .mem em { padding: 2px 7px; border-radius: 6px; background: var(--paper-deep); color: var(--muted); font-size: 11px; font-style: normal; }
+</style>

@@ -1,0 +1,67 @@
+/*
+ * Design tokens. Every colour exists once and resolves for light or dark through light-dark(),
+ * so a theme switch is a single color-scheme change. Values come from Varin's own varin-light /
+ * varin-dark themes, the app icon (paper #efefe8, slate #20272a, sage #77837f) and the startup splash.
+ */
+:root {
+  color-scheme: light dark;
+
+  --paper: light-dark(#fcfbf9, #161616);
+  --paper-deep: light-dark(#efefe8, #1e1e1d);
+  --card: light-dark(#fffefd, #1c1c1c);
+  --elev: light-dark(#ffffff, #242424);
+  --bubble: light-dark(#f0efed, #262626);
+  --ink: light-dark(#1b1a18, #ededed);
+  --ink-hover: light-dark(#393632, #ffffff);
+  --on-ink: light-dark(#fcfbf9, #141414);
+  --muted: light-dark(#615e59, #a5a5a5);
+  --sage: light-dark(#77837f, #8e9694);
+  --brand-a: light-dark(#20272a, #eeeee8);
+  --brand-b: light-dark(#77837f, #8e9694);
+
+  --line: light-dark(rgba(27, 26, 24, 0.15), rgba(255, 255, 255, 0.14));
+  --hair: light-dark(rgba(24, 22, 19, 0.08), rgba(255, 255, 255, 0.08));
+  --face: light-dark(rgba(27, 26, 24, 0.12), rgba(255, 255, 255, 0.13));
+  --cell: light-dark(rgba(27, 26, 24, 0.38), rgba(255, 255, 255, 0.34));
+  --tile-strong: light-dark(rgba(119, 131, 127, 0.24), rgba(142, 150, 148, 0.26));
+  --hl: light-dark(rgba(119, 131, 127, 0.2), rgba(142, 150, 148, 0.24));
+  --glass: light-dark(rgba(252, 251, 249, 0.78), rgba(22, 22, 22, 0.72));
+  --shadow: light-dark(rgba(24, 22, 19, 0.32), rgba(0, 0, 0, 0.7));
+  --focus: light-dark(rgba(27, 26, 24, 0.55), rgba(237, 237, 237, 0.6));
+
+  --band: light-dark(#20272a, #232a2c);
+  --on-band: #eeeee8;
+  --code: light-dark(#1b1a18, #0e0e0e);
+  --ok: light-dark(#5f8d3d, #76ad4f);
+  --warn: light-dark(#8d6c15, #c67f13);
+  --err: light-dark(#b7493f, #da5b4a);
+
+  /* Bot mascot */
+  --shell: light-dark(#efefe8, #2a2a28);
+  --visor: light-dark(#20272a, #0b0b0b);
+  --visor-sleep: light-dark(#3b4245, #1a1a1a);
+  --eye: #eeeee8;
+
+  /* Scene colours read by the floor Canvas. The pulse is the paper with a little ink mixed in,
+     opaque on purpose, exactly like the product splash. */
+  --scene-line: var(--line);
+  --scene-pulse: color-mix(in srgb, var(--ink) 7%, var(--paper));
+
+  /* Motion: the product's single curve and its three durations. */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --t-fast: 170ms;
+  --t-normal: 280ms;
+  --t-slow: 520ms;
+
+  --sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono",
+    Menlo, monospace;
+
+  --page: 1160px;
+  --gutter: clamp(18px, 3vw, 28px);
+  --radius-card: 20px;
+}
+
+:root[data-theme="light"] { color-scheme: light; }
+:root[data-theme="dark"] { color-scheme: dark; }

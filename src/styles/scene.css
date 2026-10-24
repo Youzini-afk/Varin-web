@@ -1,0 +1,92 @@
+/*
+ * The splash scene shared by the hero and the closing section.
+ * Camera: perspective 1800px, tilt 58°, spin 45°, cube edge 96px — the product's constants.
+ * `--tilt`, `--press` and `--faces` are written by the scene controller in the same frame it draws the floor.
+ */
+@property --tilt { syntax: '<angle>'; inherits: true; initial-value: 58deg; }
+
+.scene { position: absolute; inset: 0; pointer-events: none; }
+.scene-floor { position: absolute; inset: 0; width: 100%; height: 100%; }
+.scene-mask {
+  position: absolute;
+  inset: 0;
+  /* Solid near the cube, atmospheric toward the edges and behind the headline. */
+  -webkit-mask-image: radial-gradient(ellipse var(--mask-w, 60%) var(--mask-h, 56%) at 50% var(--mask-y, var(--origin-y, 74%)), #000 22%, rgba(0, 0, 0, 0.55) 52%, transparent 88%);
+          mask-image: radial-gradient(ellipse var(--mask-w, 60%) var(--mask-h, 56%) at 50% var(--mask-y, var(--origin-y, 74%)), #000 22%, rgba(0, 0, 0, 0.55) 52%, transparent 88%);
+}
+
+.horizon {
+  position: absolute;
+  left: 50%;
+  top: var(--origin-y, 74%);
+  width: 0;
+  height: 0;
+  translate: 0 var(--lift, 0px);
+  scale: var(--scene-scale, 1);
+}
+.camera {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 0;
+  height: 0;
+  transform-origin: 0 0;
+  transform-style: preserve-3d;
+  transform: perspective(1800px) rotateX(var(--tilt)) rotateZ(45deg);
+}
+
+/* The cube's own footprint. It lives in the DOM camera so it shares the cube's projection exactly. */
+.contact {
+  position: absolute;
+  left: -48px;
+  top: -48px;
+  width: 96px;
+  height: 96px;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--ink);
+  opacity: calc(var(--contact, 0.3) * var(--contact-alive, 1));
+}
+.contact::after { content: ""; position: absolute; inset: 0; background: var(--tile-strong); opacity: var(--contact-lit, 0); }
+.scene.is-idle .contact { animation: contact-breathe 1.8s ease-in-out infinite; }
+@keyframes contact-breathe { 0%, 100% { opacity: calc(0.22 * var(--contact-alive, 1)); } 50% { opacity: calc(0.6 * var(--contact-alive, 1)); } }
+
+/* No-script fallback floor: a CSS grid laid in the same camera. Hidden once the Canvas owns the floor. */
+.floor-css {
+  position: absolute;
+  left: -1392px;
+  top: -1392px;
+  width: 2304px;
+  height: 2304px;
+  background-image: linear-gradient(to right, var(--line) 1px, transparent 1px), linear-gradient(to bottom, var(--line) 1px, transparent 1px);
+  background-size: 96px 96px;
+}
+.scene[data-floor='canvas'] .floor-css { display: none; }
+
+.markwrap { position: absolute; left: 0; top: 0; transform-style: preserve-3d; translate: 0 0 var(--drop, 0px); }
+.mark3d {
+  position: absolute;
+  left: -48px;
+  top: -48px;
+  width: 96px;
+  height: 96px;
+  transform-style: preserve-3d;
+  transform: translateZ(var(--press, 48px));
+}
+.face {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template: repeat(4, 1fr) / repeat(4, 1fr);
+  backface-visibility: hidden;
+  background-color: var(--paper);
+  background-image: linear-gradient(var(--face), var(--face));
+  box-shadow: inset 0 0 0 1px var(--ink);
+  opacity: var(--faces, 1);
+}
+.face.top { display: block; transform: translateZ(48px); }
+.face.fx { transform: rotateY(90deg) translateZ(48px); }
+.face.fy { transform: rotateX(-90deg) translateZ(48px); }
+.face i { background: var(--cell); opacity: var(--o); }
+.glyph { display: block; width: 100%; height: 100%; fill: var(--ink); }
+.scene.is-idle .glyph { animation: glyph 1.8s ease-in-out infinite; }
+@keyframes glyph { 0%, 100% { filter: drop-shadow(0 0 0 transparent); } 50% { filter: drop-shadow(0 0 4px var(--ink)); } }

@@ -1,0 +1,65 @@
+---
+import '@fontsource-variable/inter';
+import '@fontsource-variable/jetbrains-mono';
+import '~/styles/tokens.css';
+import '~/styles/base.css';
+import Footer from '~/components/Footer.astro';
+import Nav from '~/components/Nav.astro';
+import { copyFor, localePath, otherLocale, type Locale } from '~/i18n';
+import { THEME_STORAGE_KEY } from '~/lib/theme';
+
+interface Props {
+  locale: Locale;
+  title?: string;
+  description?: string;
+  /** Path of this page without the locale prefix, used for the language switch. */
+  path?: string;
+}
+const { locale, path = '/' } = Astro.props;
+const t = copyFor(locale);
+const title = Astro.props.title ?? t.meta.title;
+const description = Astro.props.description ?? t.meta.description;
+const alternate = otherLocale(locale);
+---
+<!doctype html>
+<html lang={t.meta.lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fcfbf9" />
+    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#161616" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Varin" />
+    <link rel="alternate" hreflang={copyFor(alternate).meta.lang} href={localePath(alternate, path)} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <!-- Applied before first paint: stored appearance and the script marker used by reveal styles. -->
+    <script is:inline define:vars={{ key: THEME_STORAGE_KEY }}>
+      (function () {
+        var root = document.documentElement;
+        root.classList.add('js');
+        try {
+          var stored = localStorage.getItem(key);
+          if (stored === 'light' || stored === 'dark') root.dataset.theme = stored;
+        } catch (error) { /* storage unavailable: follow the system */ }
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">{t.nav.skip}</a>
+    <Nav locale={locale} path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <script>
+      import '~/scripts/main';
+    </script>
+  </body>
+</html>

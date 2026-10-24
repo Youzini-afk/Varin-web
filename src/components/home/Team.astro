@@ -1,0 +1,93 @@
+---
+import Avatar from '~/components/Avatar.astro';
+import { copyFor, type Locale } from '~/i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = copyFor(locale).team;
+const name = (role: string): string => (t.names as Record<string, string>)[role] ?? role;
+const lastIndex = t.feed.length - 1;
+---
+<section class="section split team" id="team" aria-labelledby="team-title" data-live>
+  <div>
+    <p class="kicker" data-reveal>{t.kicker}</p>
+    <h2 class="title" id="team-title" data-reveal style="--d:60ms">{t.title}{t.subtitle && <small>{t.subtitle}</small>}</h2>
+    <p class="desc" data-reveal style="--d:120ms">{t.desc}</p>
+    <ul class="feats" data-reveal style="--d:180ms">{t.feats.map((feat) => <li>{feat}</li>)}</ul>
+  </div>
+
+  <div class="card collab" data-reveal style="--d:120ms" aria-hidden="true">
+    <div class="head">
+      <div><b>{t.panel.title}</b> <span>{t.panel.members}</span></div>
+      <div class="crew">
+        <Avatar role="main" size={30} /><Avatar role="worker" size={30} /><Avatar role="retrieval" size={30} /><Avatar role="verifier" size={30} />
+      </div>
+    </div>
+    <ol class="feed">
+      {t.feed.map((message, index) => (
+        <li class:list={['msg', { report: index === lastIndex }]} style={`--i:${index}`}>
+          <Avatar role={message.from} size={30} />
+          <div>
+            <div class="who"><b>{name(message.from)}</b><i>→</i>{name(message.to)}</div>
+            <span class="bub">
+              {index === lastIndex && <span class="tagline">{t.report}</span>}
+              {message.text}
+            </span>
+            {index === lastIndex - 1 && (
+              <div class="handoff">
+                <svg viewBox="0 0 24 24"><path d="M7 3.5h7l4 4V20a.5.5 0 0 1-.5.5h-10A.5.5 0 0 1 7 20Z" /><path d="M14 3.5V8h4M10 13h4M10 16.5h4" /></svg>
+                {t.handoff} <span class="add">+182</span><span class="del">−95</span>
+              </div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+    <div class="composer">{t.panel.composerBefore} <em>@{name('worker')}</em> {t.panel.composerAfter}<span class="caret"></span></div>
+  </div>
+</section>
+
+<style>
+  .team { position: relative; z-index: 1; }
+  /* Arrive while the hero's floor is still dissolving, instead of after a blank screen. */
+  /* The hero track is 140vh longer than a screen (120vh on phones); half of that overlaps here. */
+  :global(html.js) .team { margin-top: -70vh; padding-top: 48px; }
+  @media (max-width: 760px) { :global(html.js) .team { margin-top: -60vh; } }
+  @media (prefers-reduced-motion: reduce) { :global(html.js) .team { margin-top: 0; } }
+
+  .collab { overflow: hidden; }
+  .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--hair); }
+  .head b { font-size: 14px; }
+  .head span { font-size: 12px; color: var(--muted); }
+  .crew { display: flex; }
+  .crew :global(.avatar) { margin-left: -6px; border-radius: 50%; background: var(--card); box-shadow: 0 0 0 2px var(--card); }
+  .crew :global(.avatar:first-child) { margin-left: 0; }
+
+  .feed { list-style: none; margin: 0; padding: 18px; display: flex; flex-direction: column; gap: 14px; min-height: 420px; }
+  .msg { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; animation: 15s var(--ease) infinite both; }
+  :global(html.js) .msg { opacity: 0; }
+  .msg:nth-child(1) { animation-name: m1; } .msg:nth-child(2) { animation-name: m2; } .msg:nth-child(3) { animation-name: m3; }
+  .msg:nth-child(4) { animation-name: m4; } .msg:nth-child(5) { animation-name: m5; }
+  /* The conversation builds quickly once on screen, holds, then replays. */
+  @keyframes m1 { 0% { opacity: 0; transform: translateY(8px); } 3%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+  @keyframes m2 { 0%, 7% { opacity: 0; transform: translateY(8px); } 10%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+  @keyframes m3 { 0%, 17% { opacity: 0; transform: translateY(8px); } 20%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+  @keyframes m4 { 0%, 29% { opacity: 0; transform: translateY(8px); } 32%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+  @keyframes m5 { 0%, 43% { opacity: 0; transform: translateY(8px); } 46%, 90% { opacity: 1; transform: none; } 96%, 100% { opacity: 0; } }
+  .who { margin-bottom: 5px; font-size: 12px; color: var(--muted); }
+  .who b { color: var(--ink); font-weight: 600; }
+  .who i { margin: 0 5px; font-style: normal; color: var(--sage); }
+  .bub { display: inline-block; max-width: 100%; padding: 9px 13px; border-radius: 4px 14px 14px 14px; background: var(--bubble); font-size: 13.5px; line-height: 1.6; }
+  .report .bub { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }
+  .tagline { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; font-size: 11px; font-weight: 600; letter-spacing: 0.06em; color: var(--ok); }
+  .tagline::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--ok); }
+  .handoff { margin-top: 8px; display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 12px; background: var(--elev); box-shadow: inset 0 0 0 1px var(--hair); font-size: 12.5px; }
+  .handoff svg { width: 16px; height: 16px; fill: none; stroke: var(--muted); stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  .add { color: var(--ok); font-family: var(--mono); }
+  .del { color: var(--err); font-family: var(--mono); }
+  .composer { margin: 4px 18px 18px; display: flex; align-items: center; gap: 6px; padding: 10px 12px; border-radius: 14px; box-shadow: inset 0 0 0 1px var(--line); font-size: 13px; color: var(--muted); }
+  .composer em { font-style: normal; padding: 2px 8px; border-radius: 6px; background: var(--hl); color: var(--ink); font-size: 12px; }
+  .caret { width: 1.5px; height: 15px; background: var(--ink); animation: caret 1s steps(1) infinite; }
+  @keyframes caret { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { :global(html.js) .msg { opacity: 1; } }
+</style>

@@ -1,0 +1,83 @@
+---
+import '~/styles/scene.css';
+import Cube from '~/components/Cube.astro';
+import DownloadButton from '~/components/DownloadButton.astro';
+import { copyFor, type Locale } from '~/i18n';
+import { REPO_URL } from '~/site';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const t = copyFor(locale).hero;
+---
+<div class="hero-track" data-hero-track>
+  <section class="hero" data-hero aria-labelledby="hero-title">
+    <div class="scene" aria-hidden="true">
+      <div class="scene-mask">
+        <canvas class="scene-floor"></canvas>
+        <div class="horizon">
+          <div class="camera">
+            <div class="floor-css"></div>
+            <span class="contact"></span>
+            <Cube />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="copy" data-hero-copy>
+      <p class="eyebrow rise d1"><i></i>{t.eyebrow}</p>
+      <h1 id="hero-title" class="rise d2">{t.title.map((part) => <span>{part}</span>)}</h1>
+      <p class="lede rise d3">{t.lede}</p>
+      <div class="cta rise d4">
+        <DownloadButton locale={locale} />
+        <a class="btn btn-ghost" href={REPO_URL}>{t.github}</a>
+      </div>
+      <p class="platforms rise d5">{t.platforms}</p>
+    </div>
+    <div class="hint" data-hero-hint aria-hidden="true">{t.hint}<span></span></div>
+  </section>
+</div>
+
+<style>
+  .hero-track { position: relative; --hero-extra: 140vh; }
+  .hero { position: relative; height: max(720px, 100vh); overflow: clip; }
+  /* The cover belongs to the hero: below 18% the scene melts into the page. */
+  .hero::after { content: ""; position: absolute; inset: auto 0 0; height: 16%; z-index: 2; pointer-events: none; background: linear-gradient(transparent, var(--paper)); }
+  .scene { --origin-y: 74%; }
+  .scene-mask { animation: scene-in 1.6s 0.1s ease both; }
+  @keyframes scene-in { from { opacity: 0; } to { opacity: 1; } }
+  .hero :global(.markwrap) { animation: land 1.4s 0.3s var(--ease) both; }
+  @keyframes land { from { transform: translateZ(260px); } to { transform: none; } }
+
+  /* Scroll choreography needs room; without scripts or with reduced motion the hero is a single screen. */
+  :global(html.js) .hero-track { height: calc(max(720px, 100vh) + var(--hero-extra)); }
+  :global(html.js) .hero { position: sticky; top: 0; }
+
+  .copy { position: relative; z-index: 3; max-width: 1040px; margin: 0 auto; padding: clamp(104px, 15vh, 132px) var(--gutter) 0; text-align: center; will-change: transform, opacity; }
+  .eyebrow { display: inline-flex; align-items: center; gap: 9px; margin: 0; padding: 6px 13px; border-radius: 999px; font-size: 12.5px; color: var(--muted); background: var(--glass); box-shadow: inset 0 0 0 1px var(--hair); }
+  .eyebrow i { width: 6px; height: 6px; border-radius: 2px; background: var(--sage); }
+  h1 { margin: 22px 0 16px; font-size: clamp(40px, 6vw, 78px); line-height: 1.08; letter-spacing: -0.045em; font-weight: 600; text-wrap: balance; }
+  h1 span { display: inline-block; }
+  h1 span + span { margin-left: 0.25em; }
+  :global(html[lang='zh-CN']) h1 span + span { margin-left: 0; }
+  .lede { max-width: 34em; margin: 0 auto; font-size: clamp(15px, 1.35vw, 17.5px); line-height: 1.8; color: var(--muted); text-wrap: pretty; }
+  .cta { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
+  .platforms { margin: 14px 0 0; font-size: 12.5px; color: var(--muted); opacity: 0.85; }
+
+  .rise { animation: rise 1s var(--ease) both; }
+  .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.14s; } .d3 { animation-delay: 0.24s; } .d4 { animation-delay: 0.34s; } .d5 { animation-delay: 0.44s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
+
+  .hint { position: absolute; left: 50%; bottom: 26px; z-index: 4; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
+  .hint span { width: 1px; height: 34px; background: linear-gradient(var(--ink), transparent); transform-origin: top; animation: hint 2.4s var(--ease) infinite; }
+  @keyframes hint { 0% { transform: scaleY(0); opacity: 1; } 60% { transform: scaleY(1); opacity: 1; } 100% { transform: scaleY(1); opacity: 0; } }
+
+  @media (max-width: 760px) {
+    .scene { --scene-scale: 0.72; --mask-w: 90%; }
+    .hero-track { --hero-extra: 120vh; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.js) .hero-track { height: auto; }
+    :global(html.js) .hero { position: relative; }
+  }
+</style>

@@ -1,0 +1,21 @@
+---
+import { MARK_PATHS, MARK_VIEWBOX } from '~/lib/brand';
+
+interface Props {
+  class?: string;
+  /** Draw both ribbons in one colour, e.g. inside the cube glyph. */
+  mono?: boolean;
+  label?: string;
+}
+const { class: className, mono = false, label } = Astro.props;
+---
+<svg class:list={['mark', { mono }, className]} viewBox={MARK_VIEWBOX} role={label ? 'img' : undefined} aria-label={label} aria-hidden={label ? undefined : 'true'} focusable="false">
+  <path class="mark-a" d={MARK_PATHS[0]} />
+  <path class="mark-b" d={MARK_PATHS[1]} />
+</svg>
+
+<style>
+  .mark-a { fill: var(--mark-a, var(--brand-a)); }
+  .mark-b { fill: var(--mark-b, var(--brand-b)); }
+  .mono .mark-b { fill: var(--mark-a, var(--brand-a)); opacity: 0.6; }
+</style>

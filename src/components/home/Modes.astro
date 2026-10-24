@@ -1,0 +1,93 @@
+---
+import Avatar from '~/components/Avatar.astro';
+import { copyFor, type Locale } from '~/i18n';
+
+interface Props { locale: Locale }
+const { locale } = Astro.props;
+const copy = copyFor(locale);
+const t = copy.modes;
+const name = (role: string): string => (copy.team.names as Record<string, string>)[role] ?? role;
+---
+<section class="section" id="modes" aria-labelledby="modes-title" data-live>
+  <p class="kicker" data-reveal>{t.kicker}</p>
+  <h2 class="title" id="modes-title" data-reveal style="--d:60ms">{t.title}{t.subtitle && <small>{t.subtitle}</small>}</h2>
+  <div class="modes">
+    {t.items.map((mode, index) => (
+      <div class="mode-wrap" data-reveal style={`--d:${120 + index * 70}ms`}>
+      <article class="card mode">
+        <span class={`ico i-${mode.id}`} aria-hidden="true">
+          {/* Glyphs from the product sprite (focus-*), split into paths so they can be drawn on hover. */}
+          {mode.id === 'code' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round">
+              <path class="a" pathLength="1" d="M4.8 3.5h4.4a1.3 1.3 0 0 1 1.3 1.3v4.4a1.3 1.3 0 0 1-1.3 1.3H4.8a1.3 1.3 0 0 1-1.3-1.3V4.8a1.3 1.3 0 0 1 1.3-1.3Z" />
+              <path class="b" pathLength="1" d="M14.8 13.5h4.4a1.3 1.3 0 0 1 1.3 1.3v4.4a1.3 1.3 0 0 1-1.3 1.3h-4.4a1.3 1.3 0 0 1-1.3-1.3v-4.4a1.3 1.3 0 0 1 1.3-1.3Z" />
+              <path pathLength="1" d="M10.5 7h6.5v6.5m-3.5 3.5H7v-6.5" />
+            </svg>
+          )}
+          {mode.id === 'research' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <path pathLength="1" d="M16.5 4.2a8.7 8.7 0 1 0 3.3 10.6" />
+              <path pathLength="1" d="M8.1 16.6a6.1 6.1 0 0 0 8.5-8.5" />
+              <path pathLength="1" d="m11.5 12.5 5-5" />
+              <circle class="dot" cx="19.3" cy="4.7" r="2" fill="currentColor" stroke="none" />
+            </svg>
+          )}
+          {mode.id === 'office' && (
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path pathLength="1" d="M5.5 4h11a2 2 0 0 1 2 2v10.5c0 2.5-1.5 4-4 4h-8a3 3 0 0 1 0-6h8v3" />
+              <path pathLength="1" d="M5.5 4v10.5" />
+              <path class="ln" pathLength="1" d="M9.5 8h5" />
+              <path class="ln" pathLength="1" d="M9.5 11.5h3" />
+            </svg>
+          )}
+          {mode.id === 'general' && (
+            <svg viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path pathLength="1" d="M14.5 3.5H9A5.5 5.5 0 0 0 3.5 9v5.5M9.5 20.5H15a5.5 5.5 0 0 0 5.5-5.5V9.5" /></g></svg>
+          )}
+        </span>
+        <h3>{mode.name}<span>{mode.label}</span></h3>
+        <p class="tagline">{mode.tagline}</p>
+        <p class="body">{mode.body}</p>
+        <div class="mates">{mode.mates.map((role) => <span><Avatar role={role} size={16} />{name(role)}</span>)}</div>
+        <blockquote>{mode.quote}</blockquote>
+      </article>
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  .modes { margin-top: 48px; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .mode-wrap { display: flex; }
+  .mode { flex: 1; display: flex; flex-direction: column; gap: 14px; padding: 24px; transition: transform var(--t-normal) var(--ease), box-shadow var(--t-normal) var(--ease); }
+  .mode:hover { transform: translateY(-4px); box-shadow: inset 0 0 0 1px var(--line), 0 22px 44px -28px var(--shadow); }
+  .ico { width: 52px; height: 52px; display: grid; place-items: center; border-radius: 15px; background: var(--paper-deep); color: var(--ink); transition: background-color var(--t-normal) var(--ease), color var(--t-normal) var(--ease); }
+  .mode:hover .ico { background: var(--ink); color: var(--on-ink); }
+  .ico svg { width: 28px; height: 28px; }
+  .ico svg * { transform-box: view-box; }
+  .ico [pathLength] { stroke-dasharray: 1; }
+  .mode:hover .ico [pathLength] { animation: draw 0.9s var(--ease) both; }
+  @keyframes draw { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+  .i-code .a { animation: code-a 5s var(--ease) infinite; }
+  .i-code .b { animation: code-b 5s var(--ease) infinite; }
+  @keyframes code-a { 0%, 40%, 100% { transform: none; } 55%, 85% { transform: translate(1.2px, 1.2px); } }
+  @keyframes code-b { 0%, 40%, 100% { transform: none; } 55%, 85% { transform: translate(-1.2px, -1.2px); } }
+  .i-research .dot { transform-origin: 12px 12px; animation: orbit 7s var(--ease) infinite; }
+  @keyframes orbit { 0%, 30% { transform: none; } 60%, 100% { transform: rotate(360deg); } }
+  .i-office .ln { transform-box: fill-box; transform-origin: left center; animation: write 4.4s var(--ease) infinite; }
+  .i-office .ln + .ln { animation-delay: 0.25s; }
+  @keyframes write { 0%, 12% { transform: scaleX(0.2); } 34%, 100% { transform: scaleX(1); } }
+  .i-general g { transform-origin: 12px 12px; animation: turn 8s var(--ease) infinite; }
+  @keyframes turn { 0%, 40% { transform: none; } 55%, 100% { transform: rotate(90deg); } }
+
+  h3 { margin: 4px 0 0; font-size: 21px; letter-spacing: -0.02em; }
+  h3 span { margin-left: 8px; font-family: var(--mono); font-size: 11.5px; font-weight: 500; letter-spacing: 0.08em; color: var(--sage); }
+  .tagline { margin: -6px 0 0; font-size: 12.5px; color: var(--sage); }
+  .body { margin: 0; font-size: 14px; line-height: 1.75; color: var(--muted); }
+  .mates { display: flex; flex-wrap: wrap; gap: 6px; }
+  .mates span { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px 3px 4px; border-radius: 999px; background: var(--paper-deep); font-size: 11.5px; }
+  blockquote { margin: auto 0 0; padding: 12px 14px; border-radius: 12px; background: var(--bubble); font-size: 13px; line-height: 1.65; }
+
+  @media (max-width: 1080px) { .modes { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 560px) { .modes { grid-template-columns: 1fr; } }
+</style>

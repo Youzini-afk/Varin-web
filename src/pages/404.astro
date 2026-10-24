@@ -1,0 +1,29 @@
+---
+import Mark from '~/components/Mark.astro';
+import { copyFor, localePath } from '~/i18n';
+import Base from '~/layouts/Base.astro';
+
+// One 404 for the whole site; it offers both languages because the requested path may belong to either.
+const en = copyFor('en');
+const zh = copyFor('zh-cn');
+---
+<Base locale="en" title="404 · Varin" path="/">
+  <section class="missing">
+    <Mark class="missing-mark" />
+    <h1>{en.notFound.title}</h1>
+    <p>{en.notFound.body}</p>
+    <p lang="zh-CN">{zh.notFound.title} {zh.notFound.body}</p>
+    <div class="cta">
+      <a class="btn btn-primary" href={localePath('en', '/')}>{en.notFound.home}</a>
+      <a class="btn btn-ghost" href={localePath('zh-cn', '/')} lang="zh-CN">{zh.notFound.home}</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .missing { min-height: 80vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 120px var(--gutter) 80px; text-align: center; }
+  .missing :global(.missing-mark) { width: 56px; height: 56px; margin-bottom: 12px; }
+  h1 { margin: 0; font-size: clamp(30px, 4vw, 48px); letter-spacing: -0.035em; }
+  p { margin: 0; max-width: 34em; color: var(--muted); line-height: 1.8; }
+  .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 18px; }
+</style>

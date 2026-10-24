@@ -1,0 +1,40 @@
+---
+import { copyFor, type Locale } from '~/i18n';
+
+interface Props { locale: Locale }
+const copy = copyFor(Astro.props.locale);
+const control = copy.control;
+const anywhere = copy.anywhere;
+---
+<section class="section pair" aria-label={`${control.title} ${anywhere.title}`} data-live>
+  <div class="card panel" data-reveal>
+    <p class="kicker">{control.kicker}</p>
+    <h3>{control.title}</h3>
+    <p>{control.body}</p>
+    <div class="timeline" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <i style={`--i:${index}`}></i>)}</div>
+  </div>
+  <div class="card panel" data-reveal style="--d:90ms">
+    <p class="kicker">{anywhere.kicker}</p>
+    <h3>{anywhere.title}</h3>
+    <p>{anywhere.body}</p>
+    <div class="devices" aria-hidden="true"><span>{anywhere.nodes[0]}</span><em></em><span class="hub">{anywhere.nodes[1]}</span><em class="back"></em><span>{anywhere.nodes[2]}</span></div>
+  </div>
+</section>
+
+<style>
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .panel { padding: 28px; }
+  h3 { margin: 10px 0; font-size: 22px; letter-spacing: -0.02em; }
+  .panel > p:not(.kicker) { margin: 0; font-size: 14px; line-height: 1.8; color: var(--muted); }
+  .timeline { margin-top: 22px; display: flex; gap: 4px; }
+  .timeline i { flex: 1; height: 26px; border-radius: 5px; background: var(--ink); animation: rewind 6s calc((7 - var(--i)) * 0.14s) var(--ease) infinite; }
+  @keyframes rewind { 0%, 40% { background: var(--ink); } 55%, 100% { background: var(--paper-deep); } }
+  .devices { margin-top: 22px; display: flex; align-items: center; justify-content: center; gap: 14px; font-size: 12px; color: var(--muted); }
+  .devices span { padding: 6px 12px; border-radius: 9px; box-shadow: inset 0 0 0 1px var(--hair); }
+  .devices .hub { color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+  .devices em { position: relative; width: 44px; height: 1px; background: var(--line); }
+  .devices em::after { content: ""; position: absolute; top: -2px; left: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--sage); animation: hop 2.4s ease-in-out infinite; }
+  .devices em.back::after { animation-direction: reverse; }
+  @keyframes hop { from { left: 0; } to { left: calc(100% - 5px); } }
+  @media (max-width: 860px) { .pair { grid-template-columns: 1fr; } }
+</style>

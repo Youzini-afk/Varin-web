@@ -1,0 +1,26 @@
+---
+import { copyFor, type Locale } from '~/i18n';
+import { LATEST_RELEASE_URL } from '~/site';
+
+interface Props {
+  locale: Locale;
+  size?: 'sm' | 'md';
+  /** Short label for compact places such as the navigation bar. */
+  short?: boolean;
+  class?: string;
+}
+const { locale, size = 'md', short = false, class: className } = Astro.props;
+const t = copyFor(locale).download;
+---
+<a
+  class:list={['btn', 'btn-primary', { 'btn-sm': size === 'sm' }, className]}
+  href={LATEST_RELEASE_URL}
+  data-download={short ? undefined : ''}
+  data-label-windows={t.windows}
+  data-label-mac={t.mac}
+  data-label-linux={t.linux}
+  data-label-other={t.other}
+>
+  <span data-download-label>{short ? t.short : t.other}</span>
+  {!short && <small data-download-arch hidden></small>}
+</a>
