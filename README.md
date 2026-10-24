@@ -19,6 +19,20 @@ screenshots to `.screens/` (light, dark, phone width, every hero stage). It need
 finds in this project or in a Varin checkout (`VARIN_SOURCE_DIR`, default `../Varin`). Set `BROWSER_PATH`
 when the browser is not Microsoft Edge on Windows.
 
+## Deployment
+
+Cloudflare Pages, production branch `main`, output directory `dist`. Pages does not recognise Bun's
+text `bun.lock`, so its automatic `npm install` is turned off and the build installs from the lockfile itself:
+
+| Setting | Value |
+| --- | --- |
+| Build command | `bun install --frozen-lockfile && bun run build` |
+| Build output directory | `dist` |
+| Environment variables | `SKIP_DEPENDENCY_INSTALL=1`, `BUN_VERSION=1.3.14` |
+
+Node.js comes from `.node-version`. `public/_headers` sets long-lived caching for hashed assets and a few
+security headers.
+
 ## Where things live
 
 | Path | Contents |
