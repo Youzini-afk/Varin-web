@@ -1,0 +1,13 @@
+---
+import Home from '~/components/home/Home.astro';
+import { DEFAULT_LOCALE, LOCALES, isLocale } from '~/i18n';
+
+/** One homepage per non-default locale: /zh-cn/, /zh-tw/, /fr/, /ja/. */
+export function getStaticPaths() {
+  return LOCALES.filter((info) => info.code !== DEFAULT_LOCALE).map((info) => ({ params: { locale: info.code } }));
+}
+
+const { locale } = Astro.params;
+if (!locale || !isLocale(locale)) throw new Error(`Unknown locale ${String(locale)}`);
+---
+<Home locale={locale} />

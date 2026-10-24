@@ -22,8 +22,18 @@ const ORIGIN_END = 0.52;
 const BREATHE_SHARE = 0.1;
 const BREATHE_CYCLE_MS = 2800;
 const BREATHE_START_MS = 1200;
+/** How far the resting cube reaches above and below its cell centre on screen, before `--scene-scale`. */
+const CUBE_ABOVE = 118;
+const CUBE_BELOW = 38;
+/** Air between the last line of the headline block and the top of the cube. */
+const COPY_GAP = 30;
+/**
+ * The bottom 16% of the hero fades into the page (Hero.astro `.hero::after`). The cube's lowest corner may dip
+ * into the top of that fade, never below 88% of the hero.
+ */
+const CUBE_LOWEST_SHARE = 0.88;
 
-interface Layout { width: number; height: number; scale: number; trackTop: number; scrollable: number }
+interface Layout { width: number; height: number; scale: number; start: number; trackTop: number; scrollable: number; hintRoom: boolean }
 
 export const mountHeroScene = (track: HTMLElement): void => {
   const hero = track.querySelector<HTMLElement>('[data-hero]');
@@ -43,7 +53,7 @@ export const mountHeroScene = (track: HTMLElement): void => {
     try { return crypto.getRandomValues(new Uint32Array(1))[0] ?? 0x02f6e2b1; } catch { return 0x02f6e2b1; }
   })();
 
-  let layout: Layout = { width: 1, height: 1, scale: 1, trackTop: 0, scrollable: 0 };
+  let layout: Layout = { width: 1, height: 1, scale: 1, start: ORIGIN_START, trackTop: 0, scrollable: 0, hintRoom: true };
   let tiles: Tile[] = [];
   let data = new Float32Array(0);
   const startedAt = performance.now();
@@ -65,9 +75,19 @@ export const mountHeroScene = (track: HTMLElement): void => {
     const width = hero.clientWidth;
     const height = hero.clientHeight;
     const scale = Number.parseFloat(getComputedStyle(scene).getPropertyValue('--scene-scale')) || 1;
-    layout = { width, height, scale, trackTop: rect.top + window.scrollY, scrollable: Math.max(0, track.offsetHeight - height) };
+    // The headline block's height depends on language, fonts and width. The cube's cell starts at the
+    // product's 74% and moves down only as far as needed to stay clear of it, never into the bottom fade.
+    // offsetTop/offsetHeight ignore the scroll transforms applied to the copy below.
+    const copyBottom = copy ? copy.offsetTop + copy.offsetHeight : 0;
+    const lowest = height * CUBE_LOWEST_SHARE - CUBE_BELOW * scale;
+    const wanted = copyBottom + CUBE_ABOVE * scale + COPY_GAP;
+    const originPx = Math.max(height * ORIGIN_START, Math.min(wanted, lowest));
+    const start = originPx / height;
+    const hintRoom = !hint || originPx + CUBE_BELOW * scale + 16 <= hint.offsetTop;
+    layout = { width, height, scale, start, trackTop: rect.top + window.scrollY, scrollable: Math.max(0, track.offsetHeight - height), hintRoom };
+    scene.style.setProperty('--origin-y', `${originPx.toFixed(1)}px`);
     renderer.resize(width, height, Math.min(window.devicePixelRatio || 1, 2));
-    tiles = buildField({ width, height, originYs: [height * ORIGIN_START, height * ORIGIN_END], scale, seed });
+    tiles = buildField({ width, height, originYs: [originPx, height * ORIGIN_END], scale, seed });
     data = new Float32Array(tiles.length * TILE_STRIDE);
     lastProgress = -1;
   };
@@ -89,12 +109,12 @@ export const mountHeroScene = (track: HTMLElement): void => {
 
     const lift = cubicEase(clamp(p / 0.4), 0.4, 0.2);
     const tilt = CAMERA_TILT_DEG * (1 - lift);
-    const originY = layout.height * mix(ORIGIN_START, ORIGIN_END, lift);
+    const originY = layout.height * mix(layout.start, ORIGIN_END, lift);
     const pressK = cubicEase(clamp((p - 0.36) / 0.22), 0.3, 0.2);
     const reveal = clamp((p - 0.56) / 0.39);
 
     setVar('--tilt', `${tilt.toFixed(3)}deg`);
-    setVar('--lift', `${(originY - layout.height * ORIGIN_START).toFixed(2)}px`);
+    setVar('--lift', `${(originY - layout.height * layout.start).toFixed(2)}px`);
     setVar('--mask-y', `${originY.toFixed(1)}px`);
     setVar('--press', `${mix(48, -54, pressK).toFixed(2)}px`);
     setVar('--faces', (1 - smoothstep(0.72, 0.86, pressK)).toFixed(3));
@@ -110,7 +130,8 @@ export const mountHeroScene = (track: HTMLElement): void => {
       copy.style.filter = k > 0.01 ? `blur(${(8 * k).toFixed(2)}px)` : '';
       copy.style.visibility = k >= 1 ? 'hidden' : '';
     }
-    if (hint) hint.style.opacity = (1 - clamp(p / 0.06)).toFixed(3);
+    // On short screens the cube can sit where the scroll hint would be; the hint then steps aside.
+    if (hint) hint.style.opacity = layout.hintRoom ? (1 - clamp(p / 0.06)).toFixed(3) : '0';
 
     const elapsed = now - startedAt;
     for (let index = 0; index < tiles.length; index += 1) {
@@ -152,7 +173,10 @@ export const mountHeroScene = (track: HTMLElement): void => {
   render(performance.now());
   run();
 
-  new ResizeObserver(() => { measure(); render(performance.now()); }).observe(hero);
+  // The copy reflows when web fonts arrive or the width changes; the cube's resting cell follows it.
+  const resized = new ResizeObserver(() => { measure(); render(performance.now()); });
+  resized.observe(hero);
+  if (copy) resized.observe(copy);
   window.addEventListener('resize', measure, { passive: true });
   onThemeChange(() => requestAnimationFrame(() => { recolor(); render(performance.now()); }));
   new IntersectionObserver(([entry]) => {

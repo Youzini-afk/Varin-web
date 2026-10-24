@@ -2,7 +2,6 @@ import type { Copy } from './types';
 
 export const en: Copy = {
   meta: {
-    lang: 'en',
     title: 'Varin · One person. A whole team.',
     description: 'The open-source agent and bot workspace for code, research, office work and everything in between. Ready out of the box, customizable all the way down. Bring your own model.',
   },
@@ -17,7 +16,7 @@ export const en: Copy = {
     docs: 'Docs',
     github: 'GitHub',
     theme: { label: 'Appearance', system: 'System', light: 'Light', dark: 'Dark' },
-    language: { label: 'Change language', current: 'EN', other: '中', otherName: '简体中文' },
+    language: 'Language',
   },
   download: {
     windows: 'Download for Windows',
@@ -41,7 +40,7 @@ export const en: Copy = {
     desc: 'The lead agent breaks the task down and hands it to teammates: a Worker writes the implementation, a research agent digs up context, a verifier runs the tests. Each member has its own name, avatar and conversation. They message each other, hand over code, and report back to whoever assigned the work. Watch them talk it through in the collaboration panel, and step in whenever you like.',
     feats: ['Members work in parallel, each in its own thread', 'They message each other directly, not only through you', 'Code handoffs come with diffs, file by file', 'Every member reports back when done'],
     panel: { title: 'Team', members: 'Lead agent and 3 teammates', composerBefore: 'Message', composerAfter: '' },
-    names: { main: 'Lead agent', worker: 'Worker', retrieval: 'Research agent', verifier: 'Verifier', peer: 'Research partner' },
+    names: { main: 'Lead agent', worker: 'Worker', retrieval: 'Research agent', verifier: 'Verifier', peer: 'Research collaborator' },
     feed: [
       { from: 'main', to: 'worker', text: 'Split the login module into a session layer and a token layer. Keep the public API.' },
       { from: 'main', to: 'retrieval', text: 'Find every place that reads user.token directly.' },
@@ -248,6 +247,7 @@ export const en: Copy = {
   },
   footer: {
     tagline: 'The open-source agent and bot workspace.',
+    languages: 'Language',
     columns: {
       product: 'Product',
       resources: 'Resources',

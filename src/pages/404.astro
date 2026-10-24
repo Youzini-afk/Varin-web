@@ -1,22 +1,21 @@
 ---
 import Mark from '~/components/Mark.astro';
-import { copyFor, localePath } from '~/i18n';
+import { copyFor, LOCALES, localePath } from '~/i18n';
 import Base from '~/layouts/Base.astro';
 
-// One 404 for the whole site; it offers both languages because the requested path may belong to either.
+// One 404 for the whole site. The requested path may belong to any language, so every homepage is offered.
 const en = copyFor('en');
-const zh = copyFor('zh-cn');
 ---
-<Base locale="en" title="404 · Varin" path="/">
+<Base locale="en" title="404 · Varin" path="/" indexable={false}>
   <section class="missing">
     <Mark class="missing-mark" />
     <h1>{en.notFound.title}</h1>
     <p>{en.notFound.body}</p>
-    <p lang="zh-CN">{zh.notFound.title} {zh.notFound.body}</p>
-    <div class="cta">
-      <a class="btn btn-primary" href={localePath('en', '/')}>{en.notFound.home}</a>
-      <a class="btn btn-ghost" href={localePath('zh-cn', '/')} lang="zh-CN">{zh.notFound.home}</a>
-    </div>
+    <ul class="homes">
+      {LOCALES.map((info) => (
+        <li><a class:list={['btn', info.code === 'en' ? 'btn-primary' : 'btn-ghost']} href={localePath(info.code, '/')} lang={info.htmlLang} hreflang={info.htmlLang}>{copyFor(info.code).notFound.home}</a></li>
+      ))}
+    </ul>
   </section>
 </Base>
 
@@ -25,5 +24,6 @@ const zh = copyFor('zh-cn');
   .missing :global(.missing-mark) { width: 56px; height: 56px; margin-bottom: 12px; }
   h1 { margin: 0; font-size: clamp(30px, 4vw, 48px); letter-spacing: -0.035em; }
   p { margin: 0; max-width: 34em; color: var(--muted); line-height: 1.8; }
-  .cta { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 18px; }
+  .homes { list-style: none; margin: 18px 0 0; padding: 0; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; }
+  .homes a { font-family: var(--sans); }
 </style>

@@ -1,7 +1,6 @@
 /** 中文文案。英文版以这份的结构为准（见 types.ts），缺字段会在类型检查时报错。 */
 export const zhCN = {
   meta: {
-    lang: 'zh-CN',
     title: 'Varin · 一个人，也能带一支团队',
     description: '开源的 Agent 与 Bot 工作台。编程、科研、办公和日常任务，装好就能用，每一处都能改，模型由你来带。',
   },
@@ -16,7 +15,7 @@ export const zhCN = {
     docs: '文档',
     github: 'GitHub',
     theme: { label: '外观', system: '跟随系统', light: '浅色', dark: '深色' },
-    language: { label: '切换语言', current: '中', other: 'EN', otherName: 'English' },
+    language: '语言',
   },
   download: {
     windows: '下载 Windows 版',
@@ -247,6 +246,7 @@ export const zhCN = {
   },
   footer: {
     tagline: '开源的 Agent 与 Bot 工作台。',
+    languages: '语言',
     columns: {
       product: '产品',
       resources: '资源',

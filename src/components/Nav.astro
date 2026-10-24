@@ -1,8 +1,9 @@
 ---
 import DownloadButton from '~/components/DownloadButton.astro';
+import LanguageMenu from '~/components/LanguageMenu.astro';
 import Mark from '~/components/Mark.astro';
 import ThemeSwitch from '~/components/ThemeSwitch.astro';
-import { copyFor, localePath, otherLocale, type Locale } from '~/i18n';
+import { copyFor, localePath, type Locale } from '~/i18n';
 import { DOCS_URL, REPO_URL } from '~/site';
 
 interface Props { locale: Locale; path: string }
@@ -10,7 +11,6 @@ const { locale, path } = Astro.props;
 const t = copyFor(locale).nav;
 const home = localePath(locale, '/');
 const anchor = (id: string): string => (path === '/' ? `#${id}` : `${home}#${id}`);
-const alternate = otherLocale(locale);
 ---
 <header class="nav" data-nav>
   <a class="brand" href={home} aria-label="Varin">
@@ -27,9 +27,7 @@ const alternate = otherLocale(locale);
   </nav>
   <div class="actions">
     <ThemeSwitch locale={locale} />
-    <a class="lang" href={localePath(alternate, path)} hreflang={copyFor(alternate).meta.lang} lang={copyFor(alternate).meta.lang} title={t.language.otherName} aria-label={`${t.language.label}: ${t.language.otherName}`}>
-      <b>{t.language.current}</b><span aria-hidden="true"> / </span>{t.language.other}
-    </a>
+    <LanguageMenu locale={locale} path={path} />
     <a class="gh" href={REPO_URL}>{t.github}</a>
     <DownloadButton locale={locale} size="sm" short />
   </div>
@@ -78,15 +76,24 @@ const alternate = otherLocale(locale);
   .links a:hover { color: var(--ink); }
   .links a:hover::after { transform: scaleX(1); }
   .actions { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
-  .lang { font-size: 12.5px; letter-spacing: 0.02em; transition: color var(--t-fast) var(--ease); }
-  .lang b { color: var(--ink); font-weight: 600; }
-  .lang:hover, .gh:hover { color: var(--ink); }
   .gh { transition: color var(--t-fast) var(--ease); }
+  .gh:hover { color: var(--ink); }
 
-  @media (max-width: 1080px) {
+  @media (max-width: 1180px) {
     .links { display: none; }
   }
   @media (max-width: 640px) {
-    .gh, .lang { display: none; }
+    .gh { display: none; }
+    .actions { gap: 8px; }
+  }
+  /* Narrow phones keep every control and drop the word mark instead. */
+  @media (max-width: 440px) {
+    .brand span { display: none; }
+  }
+  /* The smallest phones also tighten spacing so the longest download label (French) still fits at 320px. */
+  @media (max-width: 400px) {
+    .nav { gap: 12px; }
+    .actions { gap: 6px; }
+    .actions :global(.btn-sm) { padding: 0 12px; }
   }
 </style>

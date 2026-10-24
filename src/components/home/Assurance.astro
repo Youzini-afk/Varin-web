@@ -22,7 +22,7 @@ const anywhere = copy.anywhere;
 </section>
 
 <style>
-  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
   .panel { padding: 28px; }
   h3 { margin: 10px 0; font-size: 22px; letter-spacing: -0.02em; }
   .panel > p:not(.kicker) { margin: 0; font-size: 14px; line-height: 1.8; color: var(--muted); }
@@ -36,5 +36,12 @@ const anywhere = copy.anywhere;
   .devices em::after { content: ""; position: absolute; top: -2px; left: 0; width: 5px; height: 5px; border-radius: 50%; background: var(--sage); animation: hop 2.4s ease-in-out infinite; }
   .devices em.back::after { animation-direction: reverse; }
   @keyframes hop { from { left: 0; } to { left: calc(100% - 5px); } }
-  @media (max-width: 860px) { .pair { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) { .pair { grid-template-columns: minmax(0, 1fr); } }
+  /* Phones: three labelled nodes no longer fit on one line in every language, so the path runs downward. */
+  @media (max-width: 480px) {
+    .devices { flex-direction: column; gap: 6px; }
+    .devices em { width: 1px; height: 22px; }
+    .devices em::after { top: 0; left: -2px; animation-name: hop-down; }
+    @keyframes hop-down { from { top: 0; } to { top: calc(100% - 5px); } }
+  }
 </style>

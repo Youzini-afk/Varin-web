@@ -53,8 +53,9 @@
   --t-normal: 280ms;
   --t-slow: 520ms;
 
+  /* Latin first (Inter), then the CJK family for the element's language; see the :lang() rules below. */
   --sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
-    "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+    "HarmonyOS Sans SC", "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans SC", system-ui, sans-serif;
   --mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, "SFMono-Regular", "Cascadia Mono",
     Menlo, monospace;
 
@@ -65,3 +66,18 @@
 
 :root[data-theme="light"] { color-scheme: light; }
 :root[data-theme="dark"] { color-scheme: dark; }
+
+/*
+ * Han characters share code points across Chinese and Japanese but not glyph shapes, so each language
+ * names its own CJK families. `[lang]` re-applies the stack wherever a language changes inside a page,
+ * such as the language menu.
+ */
+:lang(zh-TW) {
+  --sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC",
+    "Microsoft JhengHei UI", "Microsoft JhengHei", "Noto Sans TC", system-ui, sans-serif;
+}
+:lang(ja) {
+  --sans: "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans",
+    "Hiragino Kaku Gothic ProN", "Yu Gothic UI", "Yu Gothic", "Meiryo", "Noto Sans JP", system-ui, sans-serif;
+}
+[lang] { font-family: var(--sans); }

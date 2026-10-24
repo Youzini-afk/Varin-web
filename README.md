@@ -1,11 +1,24 @@
 # Varin website
 
-The product site for [Varin](https://github.com/Youzini-afk/Varin). Static Astro build, English at `/`,
-Simplified Chinese at `/zh-cn/`.
+The product site for [Varin](https://github.com/Youzini-afk/Varin). Static Astro build in the five languages of
+Varin's README:
+
+| Path | Language |
+| --- | --- |
+| `/` | English |
+| `/zh-cn/` | 简体中文 |
+| `/zh-tw/` | 繁體中文 |
+| `/fr/` | Français |
+| `/ja/` | 日本語 |
+
+The root page picks a language before first paint: a choice made in the language menu (stored in
+`localStorage` as `varin-web-locale`) wins, otherwise the first supported entry of `navigator.languages`
+(`zh-Hant`, `zh-TW`, `zh-HK` and `zh-MO` go to Traditional Chinese). Language pages never redirect, and each
+homepage lists the others as `hreflang` alternates.
 
 ## Commands
 
-Use Node.js 22.12+ and Bun 1.3.14.
+Use Node.js 22.23.4+ (the version Astro requires) and Bun 1.3.14.
 
 ```sh
 bun install --frozen-lockfile
@@ -30,14 +43,16 @@ text `bun.lock`, so its automatic `npm install` is turned off and the build inst
 | Build output directory | `dist` |
 | Environment variables | `SKIP_DEPENDENCY_INSTALL=1`, `BUN_VERSION=1.3.14` |
 
-Node.js comes from `.node-version`. `public/_headers` sets long-lived caching for hashed assets and a few
+Canonical and `hreflang` links use `https://varin-web.pages.dev`; set `SITE_URL` (for example
+`https://varin.example`) once the site has its own domain. Node.js comes from `.node-version`. `public/_headers` sets long-lived caching for hashed assets and a few
 security headers.
 
 ## Where things live
 
 | Path | Contents |
 | --- | --- |
-| `src/i18n/` | All page copy. `zh-cn.ts` defines the shape; `en.ts` must match it or type checking fails |
+| `src/i18n/` | All page copy. `zh-cn.ts` defines the shape and every other locale must match it, or type checking fails. `index.ts` lists the locales |
+| `src/pages/` | `index.astro` (English, with language detection), `[locale]/index.astro` (the other four), `404.astro` |
 | `src/components/home/` | One component per homepage section |
 | `src/lib/scene/` | The hero scene: camera, adaptive tile field, WebGL2 / Canvas 2D floor renderer, scroll choreography |
 | `src/lib/motion/` | Shared frame loop, smooth scrolling (Lenis), entry reveals, reduced-motion preferences |

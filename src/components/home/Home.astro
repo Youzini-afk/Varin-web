@@ -11,10 +11,14 @@ import Team from '~/components/home/Team.astro';
 import type { Locale } from '~/i18n';
 import Base from '~/layouts/Base.astro';
 
-interface Props { locale: Locale }
-const { locale } = Astro.props;
+interface Props {
+  locale: Locale;
+  /** Only the root English page redirects first-time visitors to their browser language. */
+  detectLocale?: boolean;
+}
+const { locale, detectLocale = false } = Astro.props;
 ---
-<Base locale={locale} path="/">
+<Base locale={locale} path="/" detectLocale={detectLocale}>
   <Hero locale={locale} />
   <Team locale={locale} />
   <div class="rule"></div>

@@ -102,6 +102,13 @@ button { font: inherit; color: inherit; }
   text-wrap: balance;
 }
 .title small { display: block; margin-top: 8px; font-size: 15px; font-weight: 500; letter-spacing: -0.01em; color: var(--sage); }
+/* Japanese: strict kinsoku everywhere, so no line opens with ー or a small kana. Long left-aligned paragraphs keep
+   the usual character wrap, which fills each line. Headings, centred text and short labels wrap between phrases
+   where the browser can segment them (Chromium); a phrase longer than its line still breaks instead of overflowing. */
+:lang(ja) { line-break: strict; overflow-wrap: break-word; }
+:lang(ja) :is(h1, h2, h3, h4, .title, .lede, .center .desc, .tagline, blockquote, .hx, .feats li, .sub p, .btn, .eyebrow, .platforms) { word-break: auto-phrase; }
+/* Tight negative tracking suits Inter, not CJK glyphs. */
+:lang(zh) .title, :lang(ja) .title { letter-spacing: -0.01em; }
 .desc { margin: 0; max-width: 40em; font-size: 15.5px; line-height: 1.85; color: var(--muted); text-wrap: pretty; }
 .center { text-align: center; }
 .center .desc { margin-inline: auto; }
@@ -112,7 +119,7 @@ button { font: inherit; color: inherit; }
 .feats li::before { content: ""; flex: none; width: 8px; height: 8px; margin-top: 7px; border-radius: 2px; background: var(--sage); }
 
 @media (max-width: 1080px) {
-  .split { grid-template-columns: 1fr; }
+  .split { grid-template-columns: minmax(0, 1fr); }
 }
 @media (max-width: 560px) {
   .feats { grid-template-columns: 1fr; }

@@ -1,3 +1,5 @@
+import type { Locale } from './i18n/types';
+
 /** Facts about the product the site links to. One place, so a release or move changes one file. */
 export const REPO_URL = 'https://github.com/Youzini-afk/Varin';
 export const RELEASES_URL = `${REPO_URL}/releases`;
@@ -10,8 +12,16 @@ export const EXTENSION_GUIDE_URL = `${REPO_URL}/blob/main/docs/ops/varin-extensi
 export const EXTENSION_EXAMPLES_URL = `${REPO_URL}/tree/main/examples/extensions`;
 export const LINUXDO_URL = 'https://linux.do';
 
-/** Until the documentation renderer ships, docs links open the guides in the repository. */
-export const DOCS_URL = {
-  en: `${REPO_URL}/blob/main/packages/docs/README.md`,
-  'zh-cn': `${REPO_URL}/blob/main/packages/docs/README.zh-CN.md`,
-} as const;
+/**
+ * Until the documentation renderer ships, docs links open the user guides in the repository.
+ * The guides have English, Simplified Chinese, French and Japanese pages; Traditional Chinese readers get
+ * the Simplified Chinese guide, which is closer for them than the English one.
+ */
+const DOCS = `${REPO_URL}/blob/main/packages/docs`;
+export const DOCS_URL: Record<Locale, string> = {
+  en: `${DOCS}/README.md`,
+  'zh-cn': `${DOCS}/README.zh-CN.md`,
+  'zh-tw': `${DOCS}/README.zh-CN.md`,
+  fr: `${DOCS}/content/docs/fr/index.mdx`,
+  ja: `${DOCS}/content/docs/ja/index.mdx`,
+};

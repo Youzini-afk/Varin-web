@@ -5,26 +5,55 @@ import '~/styles/tokens.css';
 import '~/styles/base.css';
 import Footer from '~/components/Footer.astro';
 import Nav from '~/components/Nav.astro';
-import { copyFor, localePath, otherLocale, type Locale } from '~/i18n';
+import { copyFor, DEFAULT_LOCALE, LOCALE_STORAGE_KEY, LOCALES, localeInfo, localePath, type Locale } from '~/i18n';
 import { THEME_STORAGE_KEY } from '~/lib/theme';
 
 interface Props {
   locale: Locale;
   title?: string;
   description?: string;
-  /** Path of this page without the locale prefix, used for the language switch. */
+  /** Path of this page without the locale prefix, used for alternates and the language menu. */
   path?: string;
+  /** Send first-time visitors of this default-locale page to their browser's language. */
+  detectLocale?: boolean;
+  /** Pages without translated twins (such as the 404) skip canonical and hreflang links. */
+  indexable?: boolean;
 }
-const { locale, path = '/' } = Astro.props;
+const { locale, path = '/', detectLocale = false, indexable = true } = Astro.props;
 const t = copyFor(locale);
 const title = Astro.props.title ?? t.meta.title;
 const description = Astro.props.description ?? t.meta.description;
-const alternate = otherLocale(locale);
+const absolute = (href: string): string => new URL(href, Astro.site).href;
+// Locale prefixes for the detection script, e.g. { "zh-cn": "/zh-cn" }.
+const prefixes = Object.fromEntries(LOCALES.map((info) => [info.code, info.prefix]));
 ---
 <!doctype html>
-<html lang={t.meta.lang}>
+<html lang={localeInfo(locale).htmlLang}>
   <head>
     <meta charset="utf-8" />
+    {detectLocale && locale === DEFAULT_LOCALE && (
+      <script is:inline define:vars={{ key: LOCALE_STORAGE_KEY, prefixes }}>
+        // Runs before anything else: an explicit earlier choice wins, otherwise the browser's languages.
+        (function () {
+          var target = null;
+          try {
+            var saved = localStorage.getItem(key);
+            if (saved && Object.prototype.hasOwnProperty.call(prefixes, saved)) target = saved;
+          } catch (error) { /* storage unavailable: fall back to the browser languages */ }
+          if (!target) {
+            var list = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language || ''];
+            for (var index = 0; index < list.length && !target; index += 1) {
+              var tag = String(list[index]).toLowerCase();
+              if (tag.indexOf('zh') === 0) target = /hant|-tw|-hk|-mo/.test(tag) ? 'zh-tw' : 'zh-cn';
+              else if (tag.indexOf('ja') === 0) target = 'ja';
+              else if (tag.indexOf('fr') === 0) target = 'fr';
+              else if (tag.indexOf('en') === 0) target = 'en';
+            }
+          }
+          if (target && prefixes[target]) location.replace(prefixes[target] + '/' + location.search + location.hash);
+        })();
+      </script>
+    )}
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -35,7 +64,11 @@ const alternate = otherLocale(locale);
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Varin" />
-    <link rel="alternate" hreflang={copyFor(alternate).meta.lang} href={localePath(alternate, path)} />
+    <meta property="og:locale" content={localeInfo(locale).htmlLang.replace('-', '_')} />
+    {indexable && <link rel="canonical" href={absolute(localePath(locale, path))} />}
+    {indexable && <meta property="og:url" content={absolute(localePath(locale, path))} />}
+    {indexable && LOCALES.map((info) => <link rel="alternate" hreflang={info.hreflang} href={absolute(localePath(info.code, path))} />)}
+    {indexable && <link rel="alternate" hreflang="x-default" href={absolute(localePath(DEFAULT_LOCALE, path))} />}
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
@@ -57,7 +90,7 @@ const alternate = otherLocale(locale);
     <main id="main">
       <slot />
     </main>
-    <Footer locale={locale} />
+    <Footer locale={locale} path={path} />
     <script>
       import '~/scripts/main';
     </script>

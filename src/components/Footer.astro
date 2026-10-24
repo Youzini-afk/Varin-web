@@ -1,12 +1,12 @@
 ---
 import Mark from '~/components/Mark.astro';
-import { copyFor, localePath, type Locale } from '~/i18n';
+import { copyFor, LOCALES, localePath, type Locale } from '~/i18n';
 import {
   CHANGELOG_URL, DOCKER_GUIDE_URL, DOCS_URL, EXTENSION_GUIDE_URL, ISSUES_URL, LICENSE_URL, LINUXDO_URL, RELEASES_URL, REPO_URL,
 } from '~/site';
 
-interface Props { locale: Locale }
-const { locale } = Astro.props;
+interface Props { locale: Locale; path?: string }
+const { locale, path = '/' } = Astro.props;
 const copy = copyFor(locale);
 const t = copy.footer;
 const home = localePath(locale, '/');
@@ -45,8 +45,12 @@ const year = new Date().getFullYear();
     </nav>
   </div>
   <div class="legal">
-    <span>© {year} Varin contributors</span>
-    <a href={LICENSE_URL}>{t.license}</a>
+    <span>© {year} Varin contributors · <a href={LICENSE_URL}>{t.license}</a></span>
+    <nav class="langs" aria-label={t.languages}>
+      {LOCALES.map((info) => (
+        <a href={localePath(info.code, path)} hreflang={info.htmlLang} lang={info.htmlLang} data-locale={info.code} aria-current={info.code === locale ? 'true' : undefined}>{info.name}</a>
+      ))}
+    </nav>
   </div>
 </footer>
 
@@ -62,8 +66,12 @@ const year = new Date().getFullYear();
   .cols h2 { margin: 0 0 4px; font-family: var(--mono); font-size: 11px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sage); }
   .cols a { font-size: 13.5px; color: var(--muted); width: fit-content; transition: color var(--t-fast) var(--ease); }
   .cols a:hover { color: var(--ink); }
-  .legal { max-width: var(--page); margin: 0 auto; padding: 18px var(--gutter) 28px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--hair); }
+  .legal { max-width: var(--page); margin: 0 auto; padding: 18px var(--gutter) 28px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--hair); }
+  .legal a { transition: color var(--t-fast) var(--ease); }
   .legal a:hover { color: var(--ink); }
+  .langs { display: flex; flex-wrap: wrap; gap: 4px 14px; }
+  .langs a { font-family: var(--sans); }
+  .langs a[aria-current='true'] { color: var(--ink); font-weight: 600; }
   @media (max-width: 760px) {
     .inner { grid-template-columns: 1fr; }
     .cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
