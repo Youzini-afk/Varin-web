@@ -18,10 +18,10 @@ const anchor = (id: string): string => (path === '/' ? `#${id}` : `${home}#${id}
     <span>Varin</span>
   </a>
   <nav class="links" aria-label={t.primary}>
-    <a href={anchor('team')}>{t.team}</a>
-    <a href={anchor('modes')}>{t.modes}</a>
-    <a href={anchor('bot')}>{t.bot}</a>
     <a href={anchor('harness')}>{t.harness}</a>
+    <a href={anchor('modes')}>{t.modes}</a>
+    <a href={anchor('team')}>{t.team}</a>
+    <a href={anchor('bot')}>{t.bot}</a>
     <a href={anchor('extensions')}>{t.extensions}</a>
     <a href={DOCS_URL[locale]}>{t.docs}</a>
   </nav>

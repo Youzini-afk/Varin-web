@@ -9,7 +9,7 @@ const t = copyFor(locale).bot;
 <section class="section split" id="bot" aria-labelledby="bot-title" data-live>
   <div>
     <p class="kicker" data-reveal>{t.kicker}</p>
-    <h2 class="title" id="bot-title" data-reveal style="--d:60ms">{t.title}{t.subtitle && <small>{t.subtitle}</small>}</h2>
+    <h2 class="title" id="bot-title" data-reveal style="--d:60ms">{t.title}</h2>
     <p class="desc" data-reveal style="--d:120ms">{t.desc}</p>
     <ul class="feats" data-reveal style="--d:180ms">{t.feats.map((feat) => <li>{feat}</li>)}</ul>
   </div>

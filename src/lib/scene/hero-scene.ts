@@ -12,7 +12,7 @@ import { TILE_STRIDE, createFloorRenderer, resolveColor, type FloorRenderer } fr
  *   0.00 – 0.26  the headline block drifts up and out
  *   0.36 – 0.58  the cube presses into its own cell; its faces go just before the cell lights
  *   0.56 – 0.95  tiles leave from the cube outward, scattering and shrinking like the product reveal
- * The next section starts sliding over the hero at 0.5 (see Team.astro), so the floor dissolves under
+ * The next section starts sliding over the hero at 0.5 (see `.lead` in Home.astro), so the floor dissolves under
  * arriving content rather than leaving an empty screen.
  *
  * The Canvas floor and the DOM cube are written from the same frame, so they never disagree.

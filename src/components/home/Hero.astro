@@ -25,7 +25,7 @@ const t = copyFor(locale).hero;
     </div>
 
     <div class="copy" data-hero-copy>
-      <h1 id="hero-title" class="rise d1">{t.title.map((part) => <span>{part}</span>)}</h1>
+      <h1 id="hero-title" class="rise d1">{t.title.map((part, index) => <Fragment>{index > 0 && ' '}<span>{part}</span></Fragment>)}</h1>
       <p class="lede rise d2">{t.lede}</p>
       <div class="cta rise d3">
         <DownloadButton locale={locale} />
@@ -53,14 +53,15 @@ const t = copyFor(locale).hero;
   :global(html.js) .hero-track { height: calc(max(720px, 100vh) + var(--hero-extra)); }
   :global(html.js) .hero { position: sticky; top: 0; }
 
-  .copy { position: relative; z-index: 3; max-width: 1040px; margin: 0 auto; padding: clamp(120px, 17vh, 150px) var(--gutter) 0; text-align: center; will-change: transform, opacity; }
+  .copy { position: relative; z-index: 3; max-width: 1120px; margin: 0 auto; padding: clamp(120px, 17vh, 150px) var(--gutter) 0; text-align: center; will-change: transform, opacity; }
   /* Height counts too: on short laptop screens the headline gives way before the cube has to. */
   h1 { margin: 0 0 16px; font-size: clamp(40px, min(6vw, 9vh), 78px); line-height: 1.08; letter-spacing: -0.045em; font-weight: 600; text-wrap: balance; }
+  /* Each phrase stays whole; the plain space between phrases disappears when they wrap onto separate lines. */
   h1 span { display: inline-block; }
-  h1 span + span { margin-left: 0.25em; }
-  :global(html:lang(zh)) h1 span + span, :global(html:lang(ja)) h1 span + span { margin-left: 0; }
   :global(html:lang(zh)) h1, :global(html:lang(ja)) h1 { letter-spacing: -0.02em; }
   .lede { max-width: 34em; margin: 0 auto; font-size: clamp(15px, 1.35vw, 17.5px); line-height: 1.8; color: var(--muted); text-wrap: pretty; }
+  /* Chinese: the centred lede breaks at punctuation and spaces rather than inside a word. */
+  :global(html:lang(zh)) .lede { word-break: keep-all; overflow-wrap: break-word; }
   .cta { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 28px; }
   .platforms { margin: 14px 0 0; font-size: 12.5px; color: var(--muted); opacity: 0.85; }
 
@@ -75,11 +76,16 @@ const t = copyFor(locale).hero;
   @media (max-width: 760px) {
     .scene { --scene-scale: 0.72; --mask-w: 90%; }
     .hero-track { --hero-extra: 120vh; }
-    .copy { padding-top: 116px; }
+    .copy { padding-top: 104px; }
     h1 { margin: 0 0 14px; }
     .lede { line-height: 1.7; }
     .cta { margin-top: 24px; }
+    /* Below ~460px the headline scales with the width, so each phrase keeps to one line. */
+    h1 { font-size: clamp(30px, 8.7vw, 40px); }
   }
+  /* Short screens: start the headline a little higher so the cube keeps its air. */
+  @media (max-height: 760px) { .copy { padding-top: 100px; } }
+  @media (max-width: 760px) and (max-height: 760px) { .copy { padding-top: 90px; } }
   @media (prefers-reduced-motion: reduce) {
     :global(html.js) .hero-track { height: auto; }
     :global(html.js) .hero { position: relative; }

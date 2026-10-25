@@ -11,7 +11,7 @@ const lastIndex = t.feed.length - 1;
 <section class="section split team" id="team" aria-labelledby="team-title" data-live>
   <div>
     <p class="kicker" data-reveal>{t.kicker}</p>
-    <h2 class="title" id="team-title" data-reveal style="--d:60ms">{t.title}{t.subtitle && <small>{t.subtitle}</small>}</h2>
+    <h2 class="title" id="team-title" data-reveal style="--d:60ms">{t.title}</h2>
     <p class="desc" data-reveal style="--d:120ms">{t.desc}</p>
     <ul class="feats" data-reveal style="--d:180ms">{t.feats.map((feat) => <li>{feat}</li>)}</ul>
   </div>
@@ -48,13 +48,6 @@ const lastIndex = t.feed.length - 1;
 </section>
 
 <style>
-  .team { position: relative; z-index: 1; }
-  /* Arrive while the hero's floor is still dissolving, instead of after a blank screen. */
-  /* The hero track is 140vh longer than a screen (120vh on phones); half of that overlaps here. */
-  :global(html.js) .team { margin-top: -70vh; padding-top: 48px; }
-  @media (max-width: 760px) { :global(html.js) .team { margin-top: -60vh; } }
-  @media (prefers-reduced-motion: reduce) { :global(html.js) .team { margin-top: 0; } }
-
   .collab { overflow: hidden; }
   .head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 18px; border-bottom: 1px solid var(--hair); }
   .head b { font-size: 14px; }

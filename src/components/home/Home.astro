@@ -20,18 +20,32 @@ const { locale, detectLocale = false } = Astro.props;
 ---
 <Base locale={locale} path="/" detectLocale={detectLocale}>
   <Hero locale={locale} />
-  <Team locale={locale} />
+  <div class="lead"><Harness locale={locale} /></div>
+  <div class="rule"></div>
+  <Ready locale={locale} />
   <div class="rule"></div>
   <Modes locale={locale} />
   <div class="rule"></div>
+  <Team locale={locale} />
+  <div class="rule"></div>
   <Bot locale={locale} />
-  <div class="rule"></div>
-  <Harness locale={locale} />
-  <div class="rule"></div>
-  <Ready locale={locale} />
   <div class="rule"></div>
   <Extensions locale={locale} />
   <div class="rule"></div>
   <Assurance locale={locale} />
   <Closing locale={locale} />
 </Base>
+
+<style>
+  /* The first section arrives while the hero's floor is still dissolving, instead of after a blank screen.
+     The hero track is 140vh longer than a screen (120vh on phones); half of that overlaps here. */
+  .lead { position: relative; z-index: 1; }
+  /* With reduced motion the hero is a single static screen, so the first section keeps its normal spacing. */
+  @media (prefers-reduced-motion: no-preference) {
+    :global(html.js) .lead { margin-top: -70vh; }
+    :global(html.js) .lead > :global(.section) { padding-top: 48px; }
+  }
+  @media (prefers-reduced-motion: no-preference) and (max-width: 760px) {
+    :global(html.js) .lead { margin-top: -60vh; }
+  }
+</style>
