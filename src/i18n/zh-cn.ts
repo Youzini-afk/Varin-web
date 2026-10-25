@@ -25,10 +25,9 @@ export const zhCN = {
     short: '下载',
   },
   hero: {
-    title: ['开箱即用的开源', 'Agent\u00a0Harness。'],
-    lede: '模型之外的一切，Varin 都备好了：工具、上下文、执行、权限和恢复。编程、科研、办公装好就能用，填上自己的 API\u00a0Key 就能开始，从\u00a0Agent\u00a0到整套工作台都能按需调整。',
+    lede: '模型之外的一切都已备好，开箱即用，也可深度定制。',
     github: '在 GitHub 查看',
-    platforms: 'macOS · Linux · Docker 自托管 · 浏览器与手机连接',
+    platforms: 'Windows · macOS · Linux · Docker 自托管',
     hint: '向下滚动',
   },
   harness: {

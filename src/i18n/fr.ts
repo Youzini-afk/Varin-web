@@ -30,10 +30,9 @@ export const fr: Copy = {
     short: 'Télécharger',
   },
   hero: {
-    title: ['Le harness d’agents', 'prêt à\u00a0l’emploi.'],
-    lede: 'Open source, avec tout ce qui entoure le modèle\u00a0: outils, contexte, exécution, permissions et reprise. Code, recherche et bureautique fonctionnent dès l’installation\u00a0; une clé d’API suffit pour commencer.',
+    lede: 'Tout ce qui entoure le modèle, prêt à l’emploi et personnalisable en profondeur.',
     github: 'Voir sur GitHub',
-    platforms: 'macOS · Linux · Auto-hébergé avec Docker · Depuis un navigateur ou un téléphone',
+    platforms: 'Windows · macOS · Linux · Auto-hébergé avec Docker',
     hint: 'Défiler',
   },
   harness: {

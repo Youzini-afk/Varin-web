@@ -27,10 +27,9 @@ export const zhTW: Copy = {
     short: '下載',
   },
   hero: {
-    title: ['開箱即用的開源', 'Agent\u00a0Harness。'],
-    lede: '模型之外的一切，Varin 都備妥了：工具、上下文、執行、權限和復原。程式開發、科研、辦公裝好就能用，填上自己的 API\u00a0Key 就能開始，從\u00a0Agent\u00a0到整套工作台都能依需求調整。',
+    lede: '模型之外的一切都已備妥，開箱即用，也能深度自訂。',
     github: '在 GitHub 查看',
-    platforms: 'macOS · Linux · Docker 自行託管 · 從瀏覽器與手機連線',
+    platforms: 'Windows · macOS · Linux · Docker 自行託管',
     hint: '向下捲動',
   },
   harness: {

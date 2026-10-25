@@ -27,10 +27,9 @@ export const ja: Copy = {
     short: 'ダウンロード',
   },
   hero: {
-    title: ['すぐ使える OSS の', 'Agent\u00a0Harness。'],
-    lede: 'モデル以外のすべてを Varin が用意します。ツール、コンテキスト、実行、権限、そして復旧。コーディング、研究、オフィスワークはインストールしてすぐ使え、自分の API キーを入れるだけで始められます。エージェントからワークベンチ全体まで、必要に応じて調整できます。',
+    lede: 'モデル以外のすべてが揃い、すぐに使えて、深くカスタマイズもできます。',
     github: 'GitHub で見る',
-    platforms: 'macOS · Linux · Docker でセルフホスト · ブラウザーやスマートフォンから接続',
+    platforms: 'Windows · macOS · Linux · Docker でセルフホスト',
     hint: 'スクロール',
   },
   harness: {

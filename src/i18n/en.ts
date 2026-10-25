@@ -26,10 +26,9 @@ export const en: Copy = {
     short: 'Download',
   },
   hero: {
-    title: ['Open-source agent harness.', 'Ready out\u00a0of\u00a0the\u00a0box.'],
-    lede: 'Tools, context, execution, permissions and recovery come ready around the model. Code, research and office work run out of the box. Add an API key to start, then adjust whatever you like.',
+    lede: 'Everything around the model, ready out of the box and customizable in depth.',
     github: 'View on GitHub',
-    platforms: 'macOS · Linux · Self-host with Docker · Connect from a browser or phone',
+    platforms: 'Windows · macOS · Linux · Self-host with Docker',
     hint: 'Scroll',
   },
   harness: {
