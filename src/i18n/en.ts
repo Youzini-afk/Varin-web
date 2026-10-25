@@ -24,11 +24,13 @@ export const en: Copy = {
     linux: 'Download for Linux',
     other: 'Download Varin',
     short: 'Download',
+    apple: 'Apple silicon',
+    appleOnly: 'Apple silicon only',
   },
   hero: {
     lede: 'Everything around the model, ready out of the box and customizable in depth.',
     github: 'View on GitHub',
-    platforms: 'Windows · macOS · Linux · Self-host with Docker',
+    docker: 'Self-host with Docker',
     hint: 'Scroll',
   },
   harness: {

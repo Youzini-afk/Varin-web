@@ -1,6 +1,6 @@
 ---
 import { copyFor, type Locale } from '~/i18n';
-import { LATEST_RELEASE_URL } from '~/site';
+import { getLatestRelease } from '~/lib/release';
 
 interface Props {
   locale: Locale;
@@ -11,15 +11,20 @@ interface Props {
 }
 const { locale, size = 'md', short = false, class: className } = Astro.props;
 const t = copyFor(locale).download;
+// Without scripts the visitor's system is unknown, so the button opens the release page;
+// src/lib/download.ts swaps in the matching installer.
+const release = await getLatestRelease();
 ---
 <a
   class:list={['btn', 'btn-primary', { 'btn-sm': size === 'sm' }, className]}
-  href={LATEST_RELEASE_URL}
-  data-download={short ? undefined : ''}
+  href={release.page}
+  data-download={short ? 'short' : 'full'}
   data-label-windows={t.windows}
   data-label-mac={t.mac}
   data-label-linux={t.linux}
   data-label-other={t.other}
+  data-chip-apple={t.apple}
+  data-chip-apple-only={t.appleOnly}
 >
   <span data-download-label>{short ? t.short : t.other}</span>
   {!short && <small data-download-arch hidden></small>}

@@ -25,11 +25,13 @@ export const zhTW: Copy = {
     linux: '下載 Linux 版',
     other: '下載 Varin',
     short: '下載',
+    apple: 'Apple 晶片',
+    appleOnly: '僅支援 Apple 晶片',
   },
   hero: {
     lede: '模型之外的一切都已備妥，開箱即用，也能深度自訂。',
     github: '在 GitHub 查看',
-    platforms: 'Windows · macOS · Linux · Docker 自行託管',
+    docker: 'Docker 自行託管',
     hint: '向下捲動',
   },
   harness: {

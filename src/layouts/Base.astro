@@ -6,6 +6,7 @@ import '~/styles/base.css';
 import Footer from '~/components/Footer.astro';
 import Nav from '~/components/Nav.astro';
 import { copyFor, DEFAULT_LOCALE, LOCALE_STORAGE_KEY, LOCALES, localeInfo, localePath, type Locale } from '~/i18n';
+import { getLatestRelease } from '~/lib/release';
 import { THEME_STORAGE_KEY } from '~/lib/theme';
 
 interface Props {
@@ -26,6 +27,8 @@ const description = Astro.props.description ?? t.meta.description;
 const absolute = (href: string): string => new URL(href, Astro.site).href;
 // Locale prefixes for the detection script, e.g. { "zh-cn": "/zh-cn" }.
 const prefixes = Object.fromEntries(LOCALES.map((info) => [info.code, info.prefix]));
+// Installer links of the latest release, read by src/lib/download.ts. "<" is escaped so the JSON cannot end the tag.
+const releaseJson = JSON.stringify(await getLatestRelease()).replace(/</g, '\\u003c');
 ---
 <!doctype html>
 <html lang={localeInfo(locale).htmlLang}>
@@ -91,6 +94,7 @@ const prefixes = Object.fromEntries(LOCALES.map((info) => [info.code, info.prefi
       <slot />
     </main>
     <Footer locale={locale} path={path} />
+    <script type="application/json" id="release-links" is:inline set:html={releaseJson}></script>
     <script>
       import '~/scripts/main';
     </script>

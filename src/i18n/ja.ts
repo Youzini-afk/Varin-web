@@ -25,11 +25,13 @@ export const ja: Copy = {
     linux: 'Linux 版をダウンロード',
     other: 'Varin をダウンロード',
     short: 'ダウンロード',
+    apple: 'Apple シリコン',
+    appleOnly: 'Apple シリコンのみ',
   },
   hero: {
     lede: 'モデル以外のすべてが揃い、すぐに使えて、深くカスタマイズもできます。',
     github: 'GitHub で見る',
-    platforms: 'Windows · macOS · Linux · Docker でセルフホスト',
+    docker: 'Docker でセルフホスト',
     hint: 'スクロール',
   },
   harness: {

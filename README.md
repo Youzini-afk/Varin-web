@@ -44,7 +44,14 @@ text `bun.lock`, so its automatic `npm install` is turned off and the build inst
 | Environment variables | `SKIP_DEPENDENCY_INSTALL=1`, `BUN_VERSION=1.3.14` |
 
 Canonical and `hreflang` links use `https://varin-web.pages.dev`; set `SITE_URL` (for example
-`https://varin.example`) once the site has its own domain. Node.js comes from `.node-version`. `public/_headers` sets long-lived caching for hashed assets and a few
+`https://varin.example`) once the site has its own domain. Node.js comes from `.node-version`.
+
+Download buttons link straight to the installer for the visitor's system (Windows x64 / ARM64, macOS Apple
+silicon, Linux x64 / ARM64), falling back to the release page for phones and unknown systems. The build reads the
+latest release from the GitHub API and bakes the links in; if that request fails, the build still succeeds and the
+browser fills the links in instead. Browsers also pick up a release newer than the build, asking the API once per
+session after a visitor points at a download link. Optional build variable: `GITHUB_TOKEN` (any token with public
+read access) lifts the anonymous API limit on shared build machines. `public/_headers` sets long-lived caching for hashed assets and a few
 security headers.
 
 ## Where things live

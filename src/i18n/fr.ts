@@ -28,11 +28,13 @@ export const fr: Copy = {
     linux: 'Télécharger pour Linux',
     other: 'Télécharger Varin',
     short: 'Télécharger',
+    apple: 'puce Apple',
+    appleOnly: 'puces Apple uniquement',
   },
   hero: {
     lede: 'Tout ce qui entoure le modèle, prêt à l’emploi et personnalisable en profondeur.',
     github: 'Voir sur GitHub',
-    platforms: 'Windows · macOS · Linux · Auto-hébergé avec Docker',
+    docker: 'Auto-hébergé avec Docker',
     hint: 'Défiler',
   },
   harness: {

@@ -3,11 +3,21 @@ import '~/styles/scene.css';
 import Cube from '~/components/Cube.astro';
 import DownloadButton from '~/components/DownloadButton.astro';
 import { copyFor, type Locale } from '~/i18n';
-import { REPO_URL } from '~/site';
+import { fileNameOf } from '~/lib/release-assets';
+import { getLatestRelease } from '~/lib/release';
+import { DOCKER_GUIDE_URL, REPO_URL } from '~/site';
 
 interface Props { locale: Locale }
 const { locale } = Astro.props;
-const t = copyFor(locale).hero;
+const copy = copyFor(locale);
+const t = copy.hero;
+// Every platform links its own installer, so it works without scripts; download.ts adjusts the architecture.
+const release = await getLatestRelease();
+const platforms = [
+  { os: 'windows', name: 'Windows', label: copy.download.windows, href: release.files['windows-x64'] ?? release.page },
+  { os: 'mac', name: 'macOS', label: copy.download.mac, href: release.files['mac-arm64'] ?? release.page },
+  { os: 'linux', name: 'Linux', label: copy.download.linux, href: release.files['linux-x64'] ?? release.page },
+] as const;
 ---
 <div class="hero-track" data-hero-track>
   <section class="hero" data-hero aria-labelledby="hero-title">
@@ -31,7 +41,11 @@ const t = copyFor(locale).hero;
         <DownloadButton locale={locale} />
         <a class="btn btn-ghost" href={REPO_URL}>{t.github}</a>
       </div>
-      <p class="platforms rise d4">{t.platforms}</p>
+      <p class="platforms rise d4">
+        <span data-release-version hidden={!release.version}>{release.version ? `v${release.version}` : ''}</span>
+        {platforms.map((item) => <a href={item.href} data-platform={item.os} aria-label={item.label} title={fileNameOf(item.href) || undefined}>{item.name}</a>)}
+        <a href={DOCKER_GUIDE_URL}>{t.docker}</a>
+      </p>
     </div>
     <div class="hint" data-hero-hint aria-hidden="true">{t.hint}<span></span></div>
   </section>
@@ -61,7 +75,12 @@ const t = copyFor(locale).hero;
   /* Chinese: the lede breaks at punctuation and spaces rather than inside a word. */
   :global(html:lang(zh)) .lede { word-break: keep-all; overflow-wrap: break-word; }
   .cta { display: flex; justify-content: center; flex-wrap: wrap; gap: 12px; margin-top: 34px; }
-  .platforms { margin: 16px 0 0; font-size: 12.5px; color: var(--muted); opacity: 0.85; }
+  /* Version, then each platform's installer and the self-hosting guide, separated by middle dots. */
+  .platforms { display: flex; flex-wrap: wrap; justify-content: center; margin: 16px 0 0; font-size: 12.5px; color: var(--muted); }
+  .platforms > :not([hidden]) ~ :not([hidden])::before { content: "·"; margin: 0 0.5em; opacity: 0.6; }
+  .platforms a { color: inherit; text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 3px; transition: color var(--t-fast) var(--ease), text-decoration-color var(--t-fast) var(--ease); }
+  .platforms a:hover, .platforms a:focus-visible { color: var(--ink); text-decoration-color: currentColor; }
+  .platforms [data-release-version] { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.02em; }
 
   .rise { animation: rise 1s var(--ease) both; }
   .d1 { animation-delay: 0.08s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.28s; } .d4 { animation-delay: 0.38s; }

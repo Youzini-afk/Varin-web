@@ -23,11 +23,13 @@ export const zhCN = {
     linux: '下载 Linux 版',
     other: '下载 Varin',
     short: '下载',
+    apple: 'Apple 芯片',
+    appleOnly: '仅支持 Apple 芯片',
   },
   hero: {
     lede: '模型之外的一切都已备好，开箱即用，也可深度定制。',
     github: '在 GitHub 查看',
-    platforms: 'Windows · macOS · Linux · Docker 自托管',
+    docker: 'Docker 自托管',
     hint: '向下滚动',
   },
   harness: {

@@ -4,6 +4,8 @@ import type { Locale } from './i18n/types';
 export const REPO_URL = 'https://github.com/Youzini-afk/Varin';
 export const RELEASES_URL = `${REPO_URL}/releases`;
 export const LATEST_RELEASE_URL = `${REPO_URL}/releases/latest`;
+/** GitHub's public API for the latest release; read at build time and, lazily, in the browser. */
+export const LATEST_RELEASE_API_URL = 'https://api.github.com/repos/Youzini-afk/Varin/releases/latest';
 export const ISSUES_URL = `${REPO_URL}/issues`;
 export const CHANGELOG_URL = `${REPO_URL}/blob/main/CHANGELOG.md`;
 export const LICENSE_URL = `${REPO_URL}/blob/main/LICENSE`;
