@@ -10,8 +10,8 @@ import { fileNameOf, parseRelease, type AssetKey, type DesktopArch, type Desktop
  * Phones, tablets and anything unrecognised keep the release page. Intel Macs, when positively identified,
  * also get the release page, since the current builds are Apple silicon only.
  *
- * A newer release than the one baked in is picked up lazily: the GitHub API is asked once per session, only
- * after a visitor shows interest in a download link (or right away if the build could not read the release).
+ * After the page settles, the browser asks the GitHub API for the latest release (cached for ten minutes per
+ * tab session), so the version and files follow GitHub even when the site was built before the last release.
  */
 type Platform = DesktopOs | 'other';
 interface Visitor { os: Platform; arch: DesktopArch | null }
@@ -20,7 +20,7 @@ interface UADataValues { architecture?: string; bitness?: string }
 interface UAData { platform?: string; mobile?: boolean; getHighEntropyValues?: (hints: string[]) => Promise<UADataValues> }
 
 const CACHE_KEY = 'varin-web-release';
-const CACHE_MS = 30 * 60 * 1000;
+const CACHE_MS = 10 * 60 * 1000;
 
 const detectOs = (): Platform => {
   const data = (navigator as Navigator & { userAgentData?: UAData }).userAgentData;
@@ -153,21 +153,13 @@ export const initDownloadButtons = async (): Promise<void> => {
   if (visitor.os !== 'other') visitor.arch = await detectArch();
   apply(visitor, baked);
 
-  let asked = false;
+  // Ask GitHub for the latest release once the page has settled, so the version and files are current
+  // even when the site has not been rebuilt since the last release.
   const update = async (): Promise<void> => {
-    if (asked) return;
-    asked = true;
     const latest = await fetchLatest(baked.page);
     if (latest && latest.version !== baked.version) apply(visitor, latest);
   };
-  if (Object.keys(baked.files).length === 0) {
-    window.setTimeout(() => void update(), 1200);
-    return;
-  }
-  const onIntent = (event: Event): void => {
-    if (!(event.target instanceof Element) || !event.target.closest(targets)) return;
-    for (const type of ['pointerover', 'focusin', 'touchstart'] as const) document.removeEventListener(type, onIntent);
-    void update();
-  };
-  for (const type of ['pointerover', 'focusin', 'touchstart'] as const) document.addEventListener(type, onIntent, { passive: true });
+  const idle = (window as Window & { requestIdleCallback?: (callback: () => void, options?: { timeout: number }) => number }).requestIdleCallback;
+  if (idle) idle(() => void update(), { timeout: 2000 });
+  else window.setTimeout(() => void update(), 800);
 };
