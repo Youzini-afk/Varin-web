@@ -26,7 +26,6 @@ export const en: Copy = {
     short: 'Download',
   },
   hero: {
-    eyebrow: 'Open source · BYOK · AGPL-3.0',
     title: ['One person.', 'A whole team.'],
     lede: 'The open-source agent and bot workspace for code, research, office work and everything in between. Ready out of the box, customizable all the way down. Bring your own model.',
     github: 'View on GitHub',

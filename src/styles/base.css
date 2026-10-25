@@ -106,7 +106,7 @@ button { font: inherit; color: inherit; }
    the usual character wrap, which fills each line. Headings, centred text and short labels wrap between phrases
    where the browser can segment them (Chromium); a phrase longer than its line still breaks instead of overflowing. */
 :lang(ja) { line-break: strict; overflow-wrap: break-word; }
-:lang(ja) :is(h1, h2, h3, h4, .title, .lede, .center .desc, .tagline, blockquote, .hx, .feats li, .sub p, .btn, .eyebrow, .platforms) { word-break: auto-phrase; }
+:lang(ja) :is(h1, h2, h3, h4, .title, .lede, .center .desc, .tagline, blockquote, .hx, .feats li, .sub p, .btn, .platforms) { word-break: auto-phrase; }
 /* Tight negative tracking suits Inter, not CJK glyphs. */
 :lang(zh) .title, :lang(ja) .title { letter-spacing: -0.01em; }
 .desc { margin: 0; max-width: 40em; font-size: 15.5px; line-height: 1.85; color: var(--muted); text-wrap: pretty; }

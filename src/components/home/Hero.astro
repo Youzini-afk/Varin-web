@@ -25,14 +25,13 @@ const t = copyFor(locale).hero;
     </div>
 
     <div class="copy" data-hero-copy>
-      <p class="eyebrow rise d1"><i></i>{t.eyebrow}</p>
-      <h1 id="hero-title" class="rise d2">{t.title.map((part) => <span>{part}</span>)}</h1>
-      <p class="lede rise d3">{t.lede}</p>
-      <div class="cta rise d4">
+      <h1 id="hero-title" class="rise d1">{t.title.map((part) => <span>{part}</span>)}</h1>
+      <p class="lede rise d2">{t.lede}</p>
+      <div class="cta rise d3">
         <DownloadButton locale={locale} />
         <a class="btn btn-ghost" href={REPO_URL}>{t.github}</a>
       </div>
-      <p class="platforms rise d5">{t.platforms}</p>
+      <p class="platforms rise d4">{t.platforms}</p>
     </div>
     <div class="hint" data-hero-hint aria-hidden="true">{t.hint}<span></span></div>
   </section>
@@ -54,11 +53,9 @@ const t = copyFor(locale).hero;
   :global(html.js) .hero-track { height: calc(max(720px, 100vh) + var(--hero-extra)); }
   :global(html.js) .hero { position: sticky; top: 0; }
 
-  .copy { position: relative; z-index: 3; max-width: 1040px; margin: 0 auto; padding: clamp(96px, 13vh, 124px) var(--gutter) 0; text-align: center; will-change: transform, opacity; }
-  .eyebrow { display: inline-flex; align-items: center; gap: 9px; margin: 0; padding: 6px 13px; border-radius: 999px; font-size: 12.5px; color: var(--muted); background: var(--glass); box-shadow: inset 0 0 0 1px var(--hair); }
-  .eyebrow i { width: 6px; height: 6px; border-radius: 2px; background: var(--sage); }
+  .copy { position: relative; z-index: 3; max-width: 1040px; margin: 0 auto; padding: clamp(120px, 17vh, 150px) var(--gutter) 0; text-align: center; will-change: transform, opacity; }
   /* Height counts too: on short laptop screens the headline gives way before the cube has to. */
-  h1 { margin: 22px 0 16px; font-size: clamp(40px, min(6vw, 9vh), 78px); line-height: 1.08; letter-spacing: -0.045em; font-weight: 600; text-wrap: balance; }
+  h1 { margin: 0 0 16px; font-size: clamp(40px, min(6vw, 9vh), 78px); line-height: 1.08; letter-spacing: -0.045em; font-weight: 600; text-wrap: balance; }
   h1 span { display: inline-block; }
   h1 span + span { margin-left: 0.25em; }
   :global(html:lang(zh)) h1 span + span, :global(html:lang(ja)) h1 span + span { margin-left: 0; }
@@ -68,7 +65,7 @@ const t = copyFor(locale).hero;
   .platforms { margin: 14px 0 0; font-size: 12.5px; color: var(--muted); opacity: 0.85; }
 
   .rise { animation: rise 1s var(--ease) both; }
-  .d1 { animation-delay: 0.05s; } .d2 { animation-delay: 0.14s; } .d3 { animation-delay: 0.24s; } .d4 { animation-delay: 0.34s; } .d5 { animation-delay: 0.44s; }
+  .d1 { animation-delay: 0.08s; } .d2 { animation-delay: 0.18s; } .d3 { animation-delay: 0.28s; } .d4 { animation-delay: 0.38s; }
   @keyframes rise { from { opacity: 0; transform: translateY(14px); filter: blur(6px); } to { opacity: 1; transform: none; filter: none; } }
 
   .hint { position: absolute; left: 50%; bottom: 26px; z-index: 4; translate: -50% 0; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 10.5px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); }
@@ -78,8 +75,8 @@ const t = copyFor(locale).hero;
   @media (max-width: 760px) {
     .scene { --scene-scale: 0.72; --mask-w: 90%; }
     .hero-track { --hero-extra: 120vh; }
-    .copy { padding-top: 92px; }
-    h1 { margin: 18px 0 14px; }
+    .copy { padding-top: 116px; }
+    h1 { margin: 0 0 14px; }
     .lede { line-height: 1.7; }
     .cta { margin-top: 24px; }
   }

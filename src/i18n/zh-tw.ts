@@ -27,7 +27,6 @@ export const zhTW: Copy = {
     short: '下載',
   },
   hero: {
-    eyebrow: '開源 · BYOK · AGPL-3.0',
     title: ['一個人，', '也能帶一支團隊。'],
     lede: '開源的 Agent 與 Bot 工作台。程式開發、科研、辦公與日常任務，裝好就能用，每一處都能改，模型由你來帶。',
     github: '在 GitHub 查看',
