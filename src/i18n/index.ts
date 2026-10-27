@@ -15,6 +15,8 @@ export interface LocaleInfo {
   readonly htmlLang: string;
   /** Value used in `hreflang` alternates. */
   readonly hreflang: string;
+  /** Open Graph uses language_TERRITORY, unlike HTML language tags. */
+  readonly ogLocale: string;
   /** The language's own name, shown in the language menu. */
   readonly name: string;
   /** Compact label for the navigation bar. */
@@ -24,15 +26,12 @@ export interface LocaleInfo {
 export const DEFAULT_LOCALE: Locale = 'en';
 
 export const LOCALES: readonly LocaleInfo[] = [
-  { code: 'en', prefix: '', htmlLang: 'en', hreflang: 'en', name: 'English', short: 'EN' },
-  { code: 'zh-cn', prefix: '/zh-cn', htmlLang: 'zh-CN', hreflang: 'zh-Hans', name: '简体中文', short: '简' },
-  { code: 'zh-tw', prefix: '/zh-tw', htmlLang: 'zh-TW', hreflang: 'zh-Hant', name: '繁體中文', short: '繁' },
-  { code: 'fr', prefix: '/fr', htmlLang: 'fr', hreflang: 'fr', name: 'Français', short: 'FR' },
-  { code: 'ja', prefix: '/ja', htmlLang: 'ja', hreflang: 'ja', name: '日本語', short: '日' },
+  { code: 'en', prefix: '', htmlLang: 'en', hreflang: 'en', ogLocale: 'en_US', name: 'English', short: 'EN' },
+  { code: 'zh-cn', prefix: '/zh-cn', htmlLang: 'zh-CN', hreflang: 'zh-Hans', ogLocale: 'zh_CN', name: '简体中文', short: '简' },
+  { code: 'zh-tw', prefix: '/zh-tw', htmlLang: 'zh-TW', hreflang: 'zh-Hant', ogLocale: 'zh_TW', name: '繁體中文', short: '繁' },
+  { code: 'fr', prefix: '/fr', htmlLang: 'fr', hreflang: 'fr', ogLocale: 'fr_FR', name: 'Français', short: 'FR' },
+  { code: 'ja', prefix: '/ja', htmlLang: 'ja', hreflang: 'ja', ogLocale: 'ja_JP', name: '日本語', short: '日' },
 ];
-
-/** Storage key for an explicit language choice made in the language menu. */
-export const LOCALE_STORAGE_KEY = 'varin-web-locale';
 
 const COPY: Record<Locale, Copy> = { en, 'zh-cn': zhCN, 'zh-tw': zhTW, fr, ja };
 

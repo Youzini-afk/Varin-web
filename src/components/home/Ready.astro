@@ -5,7 +5,7 @@ interface Props { locale: Locale }
 const { locale } = Astro.props;
 const t = copyFor(locale).ready;
 ---
-<section class="section" aria-labelledby="ready-title" data-live>
+<section class="section" id="ready" aria-labelledby="ready-title" data-live>
   <p class="kicker" data-reveal>{t.kicker}</p>
   <h2 class="title" id="ready-title" data-reveal style="--d:60ms">{t.title}</h2>
   <div class="ready">

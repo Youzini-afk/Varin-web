@@ -1,8 +1,8 @@
 /** 中文文案。其他语言以这份的结构为准（见 types.ts），缺字段会在类型检查时报错。 */
 export const zhCN = {
   meta: {
-    title: 'Varin · 开箱即用的开源 Agent Harness',
-    description: '开源的 Agent Harness。工具、上下文、执行、权限和恢复都已备好，编程、科研、办公装好就能用，填上自己的 API Key 就能开始。',
+    title: 'Varin · 开源 AI Agent Harness，编程、科研与办公',
+    description: 'Varin 是开源 AI Agent Harness，使用自己的 API Key 完成编程、科研与办公任务。支持多 Agent 协作、工具与工作台扩展，提供 Windows、macOS、Linux 客户端和 Docker 自托管。',
   },
   nav: {
     skip: '跳到正文',
@@ -27,7 +27,7 @@ export const zhCN = {
     appleOnly: '仅支持 Apple 芯片',
   },
   hero: {
-    lede: '模型之外的一切都已备好，开箱即用，也可深度定制。',
+    lede: '开源 AI Agent Harness，用自己的 API Key 完成编程、科研与办公任务。',
     github: '在 GitHub 查看',
     docker: 'Docker 自托管',
     hint: '向下滚动',

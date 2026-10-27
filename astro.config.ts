@@ -6,6 +6,8 @@ export default defineConfig({
   site: process.env.SITE_URL ?? 'https://varin-web.pages.dev',
   output: 'static',
   trailingSlash: 'ignore',
+  // Rasterize the repository-owned social-card SVG into a PNG for link previews.
+  image: { dangerouslyProcessSVG: true },
   build: {
     format: 'directory',
     inlineStylesheets: 'auto',

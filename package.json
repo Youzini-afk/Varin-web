@@ -18,6 +18,7 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
+    "verify:seo": "node scripts/verify-seo.mjs",
     "verify:screens": "node scripts/capture-screens.mjs"
   },
   "dependencies": {

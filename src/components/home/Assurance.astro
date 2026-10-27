@@ -7,13 +7,13 @@ const control = copy.control;
 const anywhere = copy.anywhere;
 ---
 <section class="section pair" aria-label={`${control.title} ${anywhere.title}`} data-live>
-  <div class="card panel" data-reveal>
+  <div class="card panel" id="control" data-reveal>
     <p class="kicker">{control.kicker}</p>
     <h3>{control.title}</h3>
     <p>{control.body}</p>
     <div class="timeline" aria-hidden="true">{Array.from({ length: 8 }, (_, index) => <i style={`--i:${index}`}></i>)}</div>
   </div>
-  <div class="card panel" data-reveal style="--d:90ms">
+  <div class="card panel" id="anywhere" data-reveal style="--d:90ms">
     <p class="kicker">{anywhere.kicker}</p>
     <h3>{anywhere.title}</h3>
     <p>{anywhere.body}</p>

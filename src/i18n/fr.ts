@@ -6,8 +6,8 @@ import type { Copy } from './types';
  */
 export const fr: Copy = {
   meta: {
-    title: 'Varin · Le harness d’agents open source, prêt à l’emploi',
-    description: 'Un harness d’agents open source. Outils, contexte, exécution, permissions et reprise sont prêts\u00a0; code, recherche et bureautique fonctionnent dès l’installation, avec votre propre clé d’API.',
+    title: 'Varin · Harness d’agents IA open source',
+    description: 'Un harness d’agents IA open source pour le code, la recherche et la bureautique. Votre clé d’API, vos agents et extensions. Windows, macOS et Linux.',
   },
   nav: {
     skip: 'Aller au contenu',
@@ -32,7 +32,7 @@ export const fr: Copy = {
     appleOnly: 'puces Apple uniquement',
   },
   hero: {
-    lede: 'Tout ce qui entoure le modèle, prêt à l’emploi et personnalisable en profondeur.',
+    lede: 'Un harness d’agents IA open source pour le code, la recherche et la bureautique, avec votre propre clé d’API.',
     github: 'Voir sur GitHub',
     docker: 'Auto-hébergé avec Docker',
     hint: 'Défiler',

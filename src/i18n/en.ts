@@ -2,8 +2,8 @@ import type { Copy } from './types';
 
 export const en: Copy = {
   meta: {
-    title: 'Varin · The open-source agent harness, ready out of the box',
-    description: 'An open-source agent harness. Tools, context, execution, permissions and recovery come ready, code, research and office work run out of the box, and your own API key is all it takes to start.',
+    title: 'Varin · Open-source AI Agent Harness',
+    description: 'An open-source AI agent harness for coding, research and office work. Bring your own API key, coordinate agents and customize tools. Windows, macOS and Linux.',
   },
   nav: {
     skip: 'Skip to content',
@@ -28,7 +28,7 @@ export const en: Copy = {
     appleOnly: 'Apple silicon only',
   },
   hero: {
-    lede: 'Everything around the model, ready out of the box and customizable in depth.',
+    lede: 'An open-source AI agent harness for coding, research and office work. Bring your own API key.',
     github: 'View on GitHub',
     docker: 'Self-host with Docker',
     hint: 'Scroll',

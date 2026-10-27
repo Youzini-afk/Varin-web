@@ -3,8 +3,8 @@ import type { Copy } from './types';
 /** 繁體中文（台灣用語）。用詞對齊 Varin 產品介面與 README.zh-TW。 */
 export const zhTW: Copy = {
   meta: {
-    title: 'Varin · 開箱即用的開源 Agent Harness',
-    description: '開源的 Agent Harness。工具、上下文、執行、權限和復原都已備妥，程式開發、科研、辦公裝好就能用，填上自己的 API Key 就能開始。',
+    title: 'Varin · 開源 AI Agent Harness，程式開發、科研與辦公',
+    description: 'Varin 是開源 AI Agent Harness，使用自己的 API Key 完成程式開發、科研與辦公任務。支援多 Agent 協作、工具與工作台擴充，提供 Windows、macOS、Linux 用戶端及 Docker 自行託管。',
   },
   nav: {
     skip: '跳到主要內容',
@@ -29,7 +29,7 @@ export const zhTW: Copy = {
     appleOnly: '僅支援 Apple 晶片',
   },
   hero: {
-    lede: '模型之外的一切都已備妥，開箱即用，也能深度自訂。',
+    lede: '開源 AI Agent Harness，用自己的 API Key 完成程式開發、科研與辦公任務。',
     github: '在 GitHub 查看',
     docker: 'Docker 自行託管',
     hint: '向下捲動',

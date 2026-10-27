@@ -13,12 +13,10 @@ import Base from '~/layouts/Base.astro';
 
 interface Props {
   locale: Locale;
-  /** Only the root English page redirects first-time visitors to their browser language. */
-  detectLocale?: boolean;
 }
-const { locale, detectLocale = false } = Astro.props;
+const { locale } = Astro.props;
 ---
-<Base locale={locale} path="/" detectLocale={detectLocale}>
+<Base locale={locale} path="/">
   <Hero locale={locale} />
   <div class="lead"><Harness locale={locale} /></div>
   <div class="rule"></div>

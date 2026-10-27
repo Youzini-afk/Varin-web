@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)">
+      <path d="M80 0H0V80" fill="none" stroke="#77837f" stroke-opacity=".14"/>
+    </pattern>
+    <radialGradient id="fade"><stop stop-color="#efefe8"/><stop offset="1" stop-color="#fcfbf9"/></radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#fcfbf9"/>
+  <rect x="500" width="700" height="630" fill="url(#fade)"/>
+  <rect width="1200" height="630" fill="url(#grid)"/>
+  <g transform="translate(132 142) scale(.62)" fill="#20272a">
+    <path d="M-35 -19 L-11 -43 L44 -43 L57 -30 L2 -30 L-21 -7 L-21 26 L-35 12 Z"/>
+    <path d="M35 19 L11 43 L-44 43 L-57 30 L-2 30 L21 7 L21 -26 L35 -12 Z" fill="#77837f"/>
+  </g>
+  <g font-family="Arial, Helvetica, sans-serif" fill="#1b1a18">
+    <text x="92" y="302" font-size="124" font-weight="700" letter-spacing="-7">Varin</text>
+    <text x="98" y="376" font-size="35">Open-source AI Agent Harness</text>
+    <text x="100" y="426" font-size="25" fill="#615e59">Coding · Research · Office</text>
+    <text x="100" y="536" font-size="19" fill="#615e59">Your API key. Your models. Your workbench.</text>
+  </g>
+  <g transform="translate(922 280)">
+    <path d="M0 -100 145 -25 0 50 -145 -25Z" fill="#efefe8" stroke="#20272a" stroke-width="2"/>
+    <path d="M-145 -25 0 50V216L-145 141Z" fill="#77837f" fill-opacity=".38" stroke="#20272a" stroke-width="2"/>
+    <path d="M0 50 145 -25V141L0 216Z" fill="#77837f" fill-opacity=".65" stroke="#20272a" stroke-width="2"/>
+    <g transform="translate(0 -25) scale(1 .52)" fill="#20272a">
+      <path d="M-35 -19 L-11 -43 L44 -43 L57 -30 L2 -30 L-21 -7 L-21 26 L-35 12 Z"/>
+      <path d="M35 19 L11 43 L-44 43 L-57 30 L-2 30 L21 7 L21 -26 L35 -12 Z"/>
+    </g>
+  </g>
+</svg>

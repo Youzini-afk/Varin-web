@@ -1,5 +1,5 @@
 ---
-import { copyFor, LOCALE_STORAGE_KEY, LOCALES, localeInfo, localePath, type Locale } from '~/i18n';
+import { copyFor, LOCALES, localeInfo, localePath, type Locale } from '~/i18n';
 
 interface Props { locale: Locale; path: string }
 const { locale, path } = Astro.props;
@@ -30,13 +30,8 @@ const label = copyFor(locale).nav.language;
   </ul>
 </details>
 
-<script define:vars={{ key: LOCALE_STORAGE_KEY }}>
-  // An explicit choice wins over browser detection on later visits to the root page.
+<script is:inline>
   document.addEventListener('click', function (event) {
-    var link = event.target instanceof Element ? event.target.closest('[data-locale]') : null;
-    if (link) {
-      try { localStorage.setItem(key, link.getAttribute('data-locale')); } catch (error) { /* storage unavailable */ }
-    }
     document.querySelectorAll('[data-lang-menu][open]').forEach(function (menu) {
       if (!menu.contains(event.target)) menu.removeAttribute('open');
     });

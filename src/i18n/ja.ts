@@ -3,8 +3,8 @@ import type { Copy } from './types';
 /** 日本語。用語は Varin の製品 UI と README.ja に合わせています。 */
 export const ja: Copy = {
   meta: {
-    title: 'Varin · すぐ使えるオープンソースの Agent Harness',
-    description: 'オープンソースの Agent Harness。ツール、コンテキスト、実行、権限、復旧が揃っていて、コーディング、研究、オフィスワークはインストールしてすぐ使えます。自分の API キーを入れるだけで始められます。',
+    title: 'Varin · オープンソースの AI Agent Harness',
+    description: 'Varin はコーディング、研究、オフィスワーク向けのオープンソース AI Agent Harness。自分の API キーで複数のエージェントを連携し、ツールやワークベンチを拡張できます。Windows、macOS、Linux に対応。',
   },
   nav: {
     skip: '本文へスキップ',
@@ -29,7 +29,7 @@ export const ja: Copy = {
     appleOnly: 'Apple シリコンのみ',
   },
   hero: {
-    lede: 'モデル以外のすべてが揃い、すぐに使えて、深くカスタマイズもできます。',
+    lede: 'コーディング、研究、オフィスワークのためのオープンソース AI Agent Harness。自分の API キーですぐに開始。',
     github: 'GitHub で見る',
     docker: 'Docker でセルフホスト',
     hint: 'スクロール',
