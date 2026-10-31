@@ -18,6 +18,7 @@ export const ja: Copy = {
     github: 'GitHub',
     theme: { label: '外観', system: 'システム', light: 'ライト', dark: 'ダーク' },
     language: '言語',
+    menu: 'メニュー',
   },
   download: {
     windows: 'Windows 版をダウンロード',

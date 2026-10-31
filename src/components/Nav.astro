@@ -11,6 +11,15 @@ const { locale, path } = Astro.props;
 const t = copyFor(locale).nav;
 const home = localePath(locale, '/');
 const anchor = (id: string): string => (path === '/' ? `#${id}` : `${home}#${id}`);
+// Homepage sections in page order; the docs link leaves the page.
+const links = [
+  { section: 'team', label: t.team },
+  { section: 'modes', label: t.modes },
+  { section: 'bot', label: t.bot },
+  { section: 'harness', label: t.harness },
+  { section: 'extensions', label: t.extensions },
+].map((item) => ({ ...item, href: anchor(item.section) }));
+const github = 'M12 .5C5.65.5.5 5.65.5 12a11.5 11.5 0 0 0 7.86 10.92c.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.37-3.87-1.37-.52-1.33-1.28-1.69-1.28-1.69-1.04-.71.08-.7.08-.7 1.15.08 1.76 1.19 1.76 1.19 1.03 1.76 2.69 1.25 3.35.96.1-.75.4-1.25.73-1.54-2.55-.29-5.24-1.28-5.24-5.68 0-1.25.45-2.28 1.19-3.08-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.8 1.19 1.83 1.19 3.08 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.65 18.35.5 12 .5Z';
 ---
 <header class="nav" data-nav>
   <a class="brand" href={home} aria-label="Varin">
@@ -18,27 +27,87 @@ const anchor = (id: string): string => (path === '/' ? `#${id}` : `${home}#${id}
     <span>Varin</span>
   </a>
   <nav class="links" aria-label={t.primary}>
-    <a href={anchor('team')}>{t.team}</a>
-    <a href={anchor('modes')}>{t.modes}</a>
-    <a href={anchor('bot')}>{t.bot}</a>
-    <a href={anchor('harness')}>{t.harness}</a>
-    <a href={anchor('extensions')}>{t.extensions}</a>
+    {links.map((item) => <a href={item.href} data-section={item.section}>{item.label}</a>)}
     <a href={DOCS_URL[locale]}>{t.docs}</a>
   </nav>
   <div class="actions">
-    <ThemeSwitch locale={locale} />
+    <a class="icon-btn gh" href={REPO_URL} aria-label={t.github} title={t.github}>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d={github} /></svg>
+    </a>
+    <span class="theme"><ThemeSwitch locale={locale} /></span>
     <LanguageMenu locale={locale} path={path} />
-    <a class="gh" href={REPO_URL}>{t.github}</a>
     <DownloadButton locale={locale} size="sm" short />
+    {/* Narrower screens: the section links move into this menu. It is a plain <details>, so it works without scripts. */}
+    <details class="menu" data-nav-menu>
+      <summary class="icon-btn" aria-label={t.menu} title={t.menu}>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path class="bar bar-a" d="M5 8.5h14" /><path class="bar bar-b" d="M5 15.5h14" /></svg>
+      </summary>
+      <div class="panel">
+        <nav aria-label={t.primary}>
+          {links.map((item) => <a href={item.href} data-section={item.section}>{item.label}</a>)}
+          <a href={DOCS_URL[locale]}>{t.docs}</a>
+        </nav>
+        <div class="panel-foot">
+          <ThemeSwitch locale={locale} />
+          <a class="panel-gh" href={REPO_URL}>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d={github} /></svg>{t.github}
+          </a>
+        </div>
+      </div>
+    </details>
   </div>
 </header>
 
 <script>
   const nav = document.querySelector<HTMLElement>('[data-nav]');
   if (nav) {
-    const update = (): void => { nav.classList.toggle('is-scrolled', window.scrollY > 24); };
+    const menu = nav.querySelector<HTMLDetailsElement>('[data-nav-menu]');
+    const links = [...nav.querySelectorAll<HTMLAnchorElement>('a[data-section]')];
+    const sections = [...new Set(links.map((link) => link.dataset.section!))]
+      .map((id) => document.getElementById(id))
+      .filter((section): section is HTMLElement => section !== null);
+    const last = sections.at(-1);
+    let current: string | null = null;
+
+    // The link of the section under the reading line is marked current. A section keeps it until the
+    // next one starts (Ready sits between Harness and Extensions); past the last one nothing is current.
+    const update = (): void => {
+      nav.classList.toggle('is-scrolled', window.scrollY > 24);
+      if (!sections.length) return;
+      const line = window.innerHeight * 0.4;
+      let next: string | null = null;
+      for (const section of sections) {
+        const box = section.getBoundingClientRect();
+        if (box.top <= line) next = section === last && box.bottom <= line ? null : section.id;
+      }
+      if (next === current) return;
+      current = next;
+      for (const link of links) {
+        if (link.dataset.section === current) link.setAttribute('aria-current', 'true');
+        else link.removeAttribute('aria-current');
+      }
+    };
+    let frame = 0;
+    const schedule = (): void => {
+      if (!frame) frame = requestAnimationFrame(() => { frame = 0; update(); });
+    };
     update();
-    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', schedule, { passive: true });
+
+    if (menu) {
+      const close = (focus: boolean): void => {
+        if (!menu.open) return;
+        menu.open = false;
+        if (focus) menu.querySelector('summary')?.focus();
+      };
+      document.addEventListener('click', (event) => { if (!menu.contains(event.target as Node)) close(false); });
+      document.addEventListener('keydown', (event) => { if (event.key === 'Escape') close(true); });
+      // Following a link closes the menu; the page then scrolls to the section.
+      menu.querySelectorAll('nav a').forEach((link) => link.addEventListener('click', () => close(false)));
+      // The menu only exists on narrow screens; widening the window must not leave it open behind the links.
+      matchMedia('(min-width: 1181px)').addEventListener('change', (query) => { if (query.matches) close(false); });
+    }
   }
 </script>
 
@@ -47,44 +116,132 @@ const anchor = (id: string): string => (path === '/' ? `#${id}` : `${home}#${id}
     position: fixed;
     inset: 0 0 auto;
     z-index: 40;
-    display: flex;
+    /* Three columns, so the links sit at the true centre of the page whatever the widths on either side. */
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    justify-content: space-between;
     gap: 20px;
-    padding: 14px var(--gutter);
+    padding: 13px var(--gutter);
   }
-  /* The glass background fades in on a pseudo element, so only opacity animates. */
+  /* The glass background fades in on a pseudo element, so only opacity animates. It is dense enough that
+     the cards scrolling underneath never read through the link labels. */
   .nav::before {
     content: "";
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: var(--glass);
+    background: color-mix(in srgb, var(--paper) 84%, transparent);
     box-shadow: 0 1px 0 var(--hair);
-    backdrop-filter: blur(14px) saturate(1.2);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2);
+    backdrop-filter: blur(20px) saturate(1.5);
+    -webkit-backdrop-filter: blur(20px) saturate(1.5);
     opacity: 0;
     transition: opacity var(--t-slow) var(--ease);
   }
   .nav.is-scrolled::before { opacity: 1; }
-  .brand { display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
+  /* Section links land below the bar, also with reduced motion (Lenis applies the same offset otherwise). */
+  :global(html) { scroll-padding-top: 72px; }
+
+  .brand { justify-self: start; display: flex; align-items: center; gap: 10px; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
   .brand :global(.brand-mark) { width: 22px; height: 22px; transition: transform var(--t-slow) var(--ease); }
   .brand:hover :global(.brand-mark) { transform: rotate(-90deg); }
-  .links { display: flex; gap: 26px; font-size: 13.5px; color: var(--muted); }
-  .links a { position: relative; transition: color var(--t-fast) var(--ease); }
-  .links a::after { content: ""; position: absolute; left: 0; right: 0; bottom: -6px; height: 1px; background: currentColor; transform: scaleX(0); transform-origin: left; transition: transform var(--t-normal) var(--ease); }
-  .links a:hover { color: var(--ink); }
-  .links a:hover::after { transform: scaleX(1); }
-  .actions { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--muted); }
-  .gh { transition: color var(--t-fast) var(--ease); }
-  .gh:hover { color: var(--ink); }
+
+  .links { display: flex; align-items: center; gap: 2px; font-size: 13.5px; }
+  .links a {
+    position: relative;
+    padding: 7px 12px;
+    border-radius: 9px;
+    color: var(--muted);
+    white-space: nowrap;
+    transition: color var(--t-fast) var(--ease), background-color var(--t-fast) var(--ease);
+  }
+  .links a:hover { color: var(--ink); background: color-mix(in srgb, var(--ink) 6%, transparent); }
+  /* The section being read: ink text and a short bar beneath it. */
+  .links a::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 2px;
+    width: 14px;
+    height: 2px;
+    margin-left: -7px;
+    border-radius: 2px;
+    background: currentColor;
+    transform: scaleX(0);
+    transition: transform var(--t-normal) var(--ease);
+  }
+  .links a[aria-current] { color: var(--ink); }
+  .links a[aria-current]::after { transform: scaleX(1); }
+
+  .actions { justify-self: end; display: flex; align-items: center; gap: 8px; }
+  /* Every control in the bar is 34px tall: icon buttons, the appearance switch, the language menu and Download. */
+  .icon-btn {
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    color: var(--muted);
+    background: var(--glass);
+    box-shadow: inset 0 0 0 1px var(--hair);
+    cursor: pointer;
+    list-style: none;
+    transition: color var(--t-fast) var(--ease), box-shadow var(--t-fast) var(--ease);
+  }
+  .icon-btn::-webkit-details-marker { display: none; }
+  .icon-btn:hover, .menu[open] > .icon-btn { color: var(--ink); box-shadow: inset 0 0 0 1px var(--line); }
+  .icon-btn svg { width: 16px; height: 16px; }
+  .gh svg { fill: currentColor; }
+
+  .menu { position: relative; display: none; }
+  .menu svg { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; }
+  .menu .bar { transform-box: view-box; transform-origin: 12px 12px; transition: transform var(--t-normal) var(--ease); }
+  .menu[open] .bar-a { transform: translateY(3.5px) rotate(45deg); }
+  .menu[open] .bar-b { transform: translateY(-3.5px) rotate(-45deg); }
+  .panel {
+    position: absolute;
+    top: calc(100% + 8px);
+    right: 0;
+    z-index: 50;
+    width: min(300px, calc(100vw - 2 * var(--gutter)));
+    padding: 6px;
+    border-radius: 14px;
+    background: var(--elev);
+    box-shadow: 0 0 0 1px var(--hair), 0 22px 48px -24px var(--shadow);
+    transform-origin: top right;
+    animation: menu-in var(--t-normal) var(--ease) both;
+  }
+  @keyframes menu-in { from { opacity: 0; transform: translateY(-4px) scale(0.98); } to { opacity: 1; transform: none; } }
+  .panel nav { display: flex; flex-direction: column; }
+  .panel nav a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 9px;
+    font-size: 15px;
+    color: var(--muted);
+    transition: background-color var(--t-fast) var(--ease), color var(--t-fast) var(--ease);
+  }
+  .panel nav a:hover, .panel nav a:focus-visible { background: var(--hl); color: var(--ink); }
+  /* Every row reserves the marker's place, so the labels stay aligned when one becomes current. */
+  .panel nav a::before { content: ""; flex: none; width: 5px; height: 5px; border-radius: 50%; background: transparent; transition: background-color var(--t-fast) var(--ease); }
+  .panel nav a[aria-current] { color: var(--ink); font-weight: 600; }
+  .panel nav a[aria-current]::before { background: currentColor; }
+  /* Shown only when the bar itself has no room for the appearance switch and GitHub. */
+  .panel-foot { display: none; align-items: center; justify-content: space-between; gap: 12px; margin-top: 6px; padding: 10px 6px 4px; border-top: 1px solid var(--hair); }
+  .panel-gh { display: inline-flex; align-items: center; gap: 8px; padding: 6px; font-size: 13.5px; color: var(--muted); transition: color var(--t-fast) var(--ease); }
+  .panel-gh:hover { color: var(--ink); }
+  .panel-gh svg { width: 16px; height: 16px; fill: currentColor; }
 
   @media (max-width: 1180px) {
+    .nav { grid-template-columns: minmax(0, 1fr) auto; }
     .links { display: none; }
+    .menu { display: block; }
   }
   @media (max-width: 640px) {
-    .gh { display: none; }
-    .actions { gap: 8px; }
+    .gh, .theme { display: none; }
+    .panel-foot { display: flex; }
+    .actions { gap: 6px; }
   }
   /* Narrow phones keep every control and drop the word mark instead. */
   @media (max-width: 440px) {
@@ -93,7 +250,6 @@ const anchor = (id: string): string => (path === '/' ? `#${id}` : `${home}#${id}
   /* The smallest phones also tighten spacing so the longest download label (French) still fits at 320px. */
   @media (max-width: 400px) {
     .nav { gap: 12px; }
-    .actions { gap: 6px; }
     .actions :global(.btn-sm) { padding: 0 12px; }
   }
 </style>

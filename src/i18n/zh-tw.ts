@@ -18,6 +18,7 @@ export const zhTW: Copy = {
     github: 'GitHub',
     theme: { label: '外觀', system: '跟隨系統', light: '淺色', dark: '深色' },
     language: '語言',
+    menu: '選單',
   },
   download: {
     windows: '下載 Windows 版',

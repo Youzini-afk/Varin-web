@@ -17,6 +17,7 @@ export const en: Copy = {
     github: 'GitHub',
     theme: { label: 'Appearance', system: 'System', light: 'Light', dark: 'Dark' },
     language: 'Language',
+    menu: 'Menu',
   },
   download: {
     windows: 'Download for Windows',

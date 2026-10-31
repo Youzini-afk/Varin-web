@@ -16,6 +16,7 @@ export const zhCN = {
     github: 'GitHub',
     theme: { label: '外观', system: '跟随系统', light: '浅色', dark: '深色' },
     language: '语言',
+    menu: '菜单',
   },
   download: {
     windows: '下载 Windows 版',
