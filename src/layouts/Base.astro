@@ -9,6 +9,7 @@ import Footer from '~/components/Footer.astro';
 import Nav from '~/components/Nav.astro';
 import { copyFor, DEFAULT_LOCALE, LOCALES, localeInfo, localePath, type Locale } from '~/i18n';
 import { getLatestRelease } from '~/lib/release';
+import { localeRedirectScript } from '~/lib/locale-redirect';
 import { homeStructuredData, jsonForHtml } from '~/lib/seo';
 import { THEME_STORAGE_KEY } from '~/lib/theme';
 
@@ -29,6 +30,9 @@ const absolute = (href: string): string => new URL(href, Astro.site).href;
 const image = await getImage({ src: socialCard, format: 'png', width: 1200, height: 630 });
 const imageUrl = absolute(image.src);
 const structuredData = indexable && path === '/' ? homeStructuredData(Astro.site!, locale, title, description) : null;
+// Only the English homepage at `/` negotiates the visitor's language (src/lib/locale-redirect.ts).
+const negotiate = indexable && locale === DEFAULT_LOCALE && path === '/';
+const prefixes = Object.fromEntries(LOCALES.map((info) => [info.code, info.prefix]));
 const releaseJson = jsonForHtml(await getLatestRelease());
 ---
 <!doctype html>
@@ -36,6 +40,7 @@ const releaseJson = jsonForHtml(await getLatestRelease());
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {negotiate && <script is:inline set:html={localeRedirectScript(prefixes, ['/'])}></script>}
     <title>{title}</title>
     <meta name="description" content={description} />
     <meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'} />

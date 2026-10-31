@@ -11,9 +11,11 @@ build in the five languages of Varin's README:
 | `/fr/` | `/fr/docs/` | Français |
 | `/ja/` | `/ja/docs/` | 日本語 |
 
-Each URL always serves its own language, including English at `/`. Visitors choose a language through
-ordinary links in the menu or footer. Browser settings and stored preferences never redirect a shared URL.
-Every page lists the other languages as `hreflang` alternates.
+Each URL serves its own language. The two English entry pages, `/` and `/docs/`, send a visitor to the first
+language in their browser's list that the site serves, before anything is drawn (`src/lib/locale-redirect.ts`).
+A language picked in the menu or footer is remembered and wins over the browser. Arriving from another page of
+the site, localized URLs and every other page never redirect, and crawlers stay on the English page, which is
+also the `x-default` alternate. Every page lists the other languages as `hreflang` alternates.
 
 ## Commands
 

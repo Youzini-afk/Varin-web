@@ -1,5 +1,6 @@
 ---
 import { copyFor, LOCALES, localeInfo, localePath, type Locale } from '~/i18n';
+import { LOCALE_STORAGE_KEY } from '~/lib/locale-redirect';
 
 interface Props { locale: Locale; path: string }
 const { locale, path } = Astro.props;
@@ -30,11 +31,16 @@ const label = copyFor(locale).nav.language;
   </ul>
 </details>
 
-<script is:inline>
+<script is:inline define:vars={{ key: LOCALE_STORAGE_KEY }}>
   document.addEventListener('click', function (event) {
     document.querySelectorAll('[data-lang-menu][open]').forEach(function (menu) {
       if (!menu.contains(event.target)) menu.removeAttribute('open');
     });
+    // A language picked here or in the footer is remembered, so the entry pages stop following the browser.
+    var link = event.target instanceof Element ? event.target.closest('a[data-locale]') : null;
+    if (link) {
+      try { localStorage.setItem(key, link.getAttribute('data-locale')); } catch (error) { /* storage unavailable */ }
+    }
   });
   document.addEventListener('keydown', function (event) {
     if (event.key !== 'Escape') return;

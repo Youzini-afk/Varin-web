@@ -103,7 +103,9 @@ for (const url of urls) {
   assert.equal(png.subarray(1, 4).toString(), 'PNG');
   assert.equal(png.readUInt32BE(16), 1200);
   assert.equal(png.readUInt32BE(20), 630);
-  assert.doesNotMatch(html, /location\.replace|navigator\.languages/);
+  // Only the English entry page negotiates the visitor's language; localized homepages never redirect.
+  if (new URL(url).pathname === '/') assert.match(html, /navigator\.languages[\s\S]*location\.replace/, 'English homepage must negotiate the language');
+  else assert.doesNotMatch(html, /location\.replace|navigator\.languages/, `${url} must not redirect`);
   assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
 }
 assert.equal(titles.size, urls.length, 'Each language must have its own title');

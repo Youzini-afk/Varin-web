@@ -3,6 +3,7 @@ import starlight from '@astrojs/starlight';
 import type { AstroIntegration } from 'astro';
 import { defineConfig } from 'astro/config';
 import { copyFor, DEFAULT_LOCALE, LOCALES } from './src/i18n';
+import { localeRedirectScript } from './src/lib/locale-redirect';
 import { REPO_URL } from './src/site';
 
 // The user guides come from the product repository. scripts/sync-docs.mjs copies them into src/content/docs/
@@ -57,6 +58,9 @@ export default defineConfig({
       social: [{ icon: 'github', label: 'GitHub', href: REPO_URL }],
       favicon: '/favicon.svg',
       head: [
+        // The English guides' entry page sends first-time visitors to their language; the script returns
+        // immediately on every other guide page (src/lib/locale-redirect.ts).
+        { tag: 'script', content: localeRedirectScript(Object.fromEntries(LOCALES.map((info) => [info.code, info.prefix])), ['/docs/']) },
         { tag: 'link', attrs: { rel: 'icon', href: '/favicon-32.png', sizes: '32x32', type: 'image/png' } },
         { tag: 'link', attrs: { rel: 'apple-touch-icon', href: '/apple-touch-icon.png' } },
         { tag: 'meta', attrs: { name: 'theme-color', media: '(prefers-color-scheme: light)', content: '#fcfbf9' } },
