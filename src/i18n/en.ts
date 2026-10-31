@@ -66,11 +66,11 @@ export const en: Copy = {
       title: 'Ready out of the box',
       body: 'Add an API key and start. Everything else is already in place.',
       stats: [
-        { value: '~80', label: 'native tools' },
+        { value: '~90', label: 'native tools' },
         { value: '4', label: 'work modes' },
         { value: '4', label: 'official workbenches' },
-        { value: '6', label: 'bundled language servers' },
-        { value: '8', label: 'native model protocols' },
+        { value: '7', label: 'bundled language servers' },
+        { value: '9', label: 'native model protocols' },
         { value: '21', label: 'theme families, light and dark' },
         { value: '10', label: 'interface languages' },
         { value: '~100', label: 'languages of offline dictation' },
@@ -229,7 +229,7 @@ export const en: Copy = {
   anywhere: {
     kicker: '08 · Anywhere',
     title: 'Computer, browser, phone. One Varin.',
-    body: 'Pair with a QR code. Away from your network, an end-to-end encrypted relay carries the connection without seeing your content.',
+    body: 'Pair with a QR code: the desktop app, a browser, or the Android app. Away from your network, connect through a relay you run; the connection is end-to-end encrypted, so the relay never sees your content.',
     nodes: ['Desktop', 'Varin', 'Browser · Phone'],
   },
   closing: {

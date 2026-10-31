@@ -65,11 +65,11 @@ export const zhCN = {
       title: '开箱即用',
       body: '填上 API Key 就能开始，其余都已就位。',
       stats: [
-        { value: '近 80', label: '个原生工具' },
+        { value: '约 90', label: '个原生工具' },
         { value: '4', label: '种工作模式' },
         { value: '4', label: '个官方工作台' },
-        { value: '6', label: '个内置语言服务器' },
-        { value: '8', label: '种原生模型协议' },
+        { value: '7', label: '个内置语言服务器' },
+        { value: '9', label: '种原生模型协议' },
         { value: '21', label: '组主题，深浅各一' },
         { value: '10', label: '种界面语言' },
         { value: '约 100', label: '种语言离线语音输入' },
@@ -228,7 +228,7 @@ export const zhCN = {
   anywhere: {
     kicker: '08 · Anywhere',
     title: '电脑、浏览器、手机，同一个 Varin。',
-    body: '扫码即可配对；不在同一个网络时，通过端到端加密的中继连接，中继看不到你的内容。',
+    body: '桌面端、浏览器和 Android 应用扫码即可配对。不在同一个网络时，通过你自己部署的中继连接；连接端到端加密，中继看不到你的内容。',
     nodes: ['桌面', 'Varin', '浏览器 · 手机'],
   },
   closing: {

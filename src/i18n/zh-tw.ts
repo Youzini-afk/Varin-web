@@ -67,11 +67,11 @@ export const zhTW: Copy = {
       title: '開箱即用',
       body: '填上 API Key 就能開始，其餘都已就緒。',
       stats: [
-        { value: '近 80', label: '個原生工具' },
+        { value: '約 90', label: '個原生工具' },
         { value: '4', label: '種工作模式' },
         { value: '4', label: '個官方工作台' },
-        { value: '6', label: '個內建語言伺服器' },
-        { value: '8', label: '種原生模型協定' },
+        { value: '7', label: '個內建語言伺服器' },
+        { value: '9', label: '種原生模型協定' },
         { value: '21', label: '組佈景主題，深淺各一' },
         { value: '10', label: '種介面語言' },
         { value: '約 100', label: '種語言離線語音輸入' },
@@ -230,7 +230,7 @@ export const zhTW: Copy = {
   anywhere: {
     kicker: '08 · Anywhere',
     title: '電腦、瀏覽器、手機，同一個 Varin。',
-    body: '掃碼即可配對；不在同一個網路時，透過端對端加密的中繼連線，中繼看不到你的內容。',
+    body: '桌面版、瀏覽器和 Android 應用程式掃碼即可配對。不在同一個網路時，透過你自己部署的中繼連線；連線端對端加密，中繼看不到你的內容。',
     nodes: ['桌面', 'Varin', '瀏覽器 · 手機'],
   },
   closing: {

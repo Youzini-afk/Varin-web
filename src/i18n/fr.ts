@@ -70,11 +70,11 @@ export const fr: Copy = {
       title: 'Prêt à l’emploi',
       body: 'Ajoutez une clé d’API et commencez. Tout le reste est déjà en place.',
       stats: [
-        { value: '~80', label: 'outils natifs' },
+        { value: '~90', label: 'outils natifs' },
         { value: '4', label: 'modes de travail' },
         { value: '4', label: 'espaces de travail officiels' },
-        { value: '6', label: 'serveurs de langage intégrés' },
-        { value: '8', label: 'protocoles de modèle natifs' },
+        { value: '7', label: 'serveurs de langage intégrés' },
+        { value: '9', label: 'protocoles de modèle natifs' },
         { value: '21', label: 'familles de thèmes, clair et sombre' },
         { value: '10', label: 'langues d’interface' },
         { value: '~100', label: 'langues en dictée hors ligne' },
@@ -233,7 +233,7 @@ export const fr: Copy = {
   anywhere: {
     kicker: '08 · Partout',
     title: 'Ordinateur, navigateur, téléphone\u00a0: un seul Varin.',
-    body: 'Associez-les avec un QR code. Loin de votre réseau, un relais chiffré de bout en bout transporte la connexion sans voir votre contenu.',
+    body: 'Associez l’application de bureau, un navigateur ou l’application Android avec un QR code. Loin de votre réseau, passez par un relais que vous hébergez\u00a0: la connexion est chiffrée de bout en bout, le relais ne voit jamais votre contenu.',
     nodes: ['Ordinateur', 'Varin', 'Navigateur · Téléphone'],
   },
   closing: {

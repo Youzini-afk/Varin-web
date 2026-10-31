@@ -43,9 +43,9 @@ text `bun.lock`, so its automatic `npm install` is turned off and the build inst
 | Build output directory | `dist` |
 | Environment variables | `SKIP_DEPENDENCY_INSTALL=1`, `BUN_VERSION=1.3.14` |
 
-Canonical and `hreflang` links, the sitemap, structured data and agent documents use
-`https://varin-web.pages.dev`; set `SITE_URL` (for example `https://varin.example`) once the site has its own
-domain. The value must be the public production origin, even when inspecting a preview build.
+Canonical and `hreflang` links, the sitemap, structured data and agent documents use the production origin
+`https://varin.dev`. Set `SITE_URL` only to build for a different public origin; the value must be that origin,
+even when inspecting a preview build.
 Node.js comes from `.node-version`.
 
 Download buttons link straight to the installer for the visitor's system (Windows x64 / ARM64, macOS Apple
