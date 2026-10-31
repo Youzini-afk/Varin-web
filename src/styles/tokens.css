@@ -36,11 +36,8 @@
   --warn: light-dark(#8d6c15, #c67f13);
   --err: light-dark(#b7493f, #da5b4a);
 
-  /* Bot mascot */
-  --shell: light-dark(#efefe8, #2a2a28);
-  --visor: light-dark(#20272a, #0b0b0b);
-  --visor-sleep: light-dark(#3b4245, #1a1a1a);
-  --eye: #eeeee8;
+  /* The flat background of the Bot stage recording (public/media/varin-at-work.mp4), the same in both themes. */
+  --bot-stage: #f3f3f3;
 
   /* Scene colours read by the floor Canvas. The pulse is the paper with a little ink mixed in,
      opaque on purpose, exactly like the product splash. */

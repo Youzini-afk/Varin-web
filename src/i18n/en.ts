@@ -28,13 +28,13 @@ export const en: Copy = {
     appleOnly: 'Apple silicon only',
   },
   hero: {
-    lede: 'An open-source AI agent harness for coding, research and office work. Bring your own API key.',
+    lede: 'Hand over the task, then watch the team get it done. Open source, with your own API key.',
     github: 'View on GitHub',
     docker: 'Self-host with Docker',
     hint: 'Scroll',
   },
   harness: {
-    kicker: '01 · Harness',
+    kicker: '04 · Harness',
     title: 'The same model goes further in Varin.',
     desc: 'The model sits in the middle. Every cell around it is something Varin prepares for it: tools, context, execution, collaboration and recovery. Put the same model in, and it can finish longer, more complex tasks.',
     core: { title: 'Model', body: 'Does the thinking. Your pick.' },
@@ -60,7 +60,7 @@ export const en: Copy = {
     },
   },
   ready: {
-    kicker: '02 · Ready, and yours',
+    kicker: '05 · Ready, and yours',
     title: 'Good defaults. Deep customization.',
     box: {
       title: 'Ready out of the box',
@@ -97,7 +97,7 @@ export const en: Copy = {
     },
   },
   modes: {
-    kicker: '03 · Four ways to work',
+    kicker: '02 · Four ways to work',
     title: 'A mode for code, research, office work and the rest.',
     subtitle: 'The mode decides which tools the agent starts with and which teammates help out.',
     items: [
@@ -124,10 +124,10 @@ export const en: Copy = {
     ],
   },
   team: {
-    kicker: '04 · Team',
+    kicker: '01 · Team',
     title: 'One task, split across several agents.',
     desc: 'The lead agent breaks the task down and assigns the parts: a Worker writes the implementation, a research agent gathers context, a verifier runs the tests. Each member has its own name, avatar and conversation. They message each other, hand over code, and report back to the agent that assigned the work. Follow the discussion in the collaboration panel and step in whenever you like.',
-    feats: ['Members work in parallel, each in its own thread', 'They message each other directly, not only through you', 'Code handoffs come with diffs, file by file', 'Each member reports back when done'],
+    feats: ['Members work in parallel, each in its own thread', 'They message each other directly, not only through you', 'Code handoffs come with diffs, file by file', 'Each member reports back when done', 'Codex, Claude Code, Pi and ACP programs can take dispatched work too'],
     panel: { title: 'Team', members: 'Lead agent and 3 teammates', composerBefore: 'Message', composerAfter: '' },
     names: { main: 'Lead agent', worker: 'Worker', retrieval: 'Research agent', verifier: 'Verifier', peer: 'Research collaborator' },
     feed: [
@@ -141,15 +141,16 @@ export const en: Copy = {
     report: 'Report · Done',
   },
   bot: {
-    kicker: '05 · Bots',
+    kicker: '03 · Bots',
     title: 'Bots that stay on the job.',
     desc: 'A bot has its own name, personality, model and working directory, keeps several pieces of work moving, and can be given a computer desktop. You can see everything it remembers, correct it, or have it forget. Put it to sleep and its work is suspended; wake it and it picks up where it left off.',
-    feats: ['Its own name, instructions, model and folder', 'Several pieces of work in parallel', 'Memory you can see, correct and erase', 'Sleep and wake without losing work'],
+    feats: ['Its own name, instructions, model and folder', 'Several pieces of work in parallel', 'Memory you can see, correct and erase', 'Sleep and wake without losing work', 'In the desktop app, an optional desktop companion acts out the bot’s work on your desktop'],
+    video: 'Varin’s stage in the Bot workbench, replaying a scripted run: she searches, reads, sends two teammates off, collects their reports and replies',
     states: { label: 'Bot state', awake: 'Awake', sleep: 'Asleep', wake: 'Waking' },
     profile: [
-      { label: 'Name', value: 'Mallow' },
+      { label: 'Name', value: 'Varin' },
       { label: 'Model', value: 'Default' },
-      { label: 'Folder', value: '~/bots/mallow' },
+      { label: 'Folder', value: '~/bots/varin' },
     ],
     works: [
       { title: 'Weekly dependency check', awake: 'Working', ask: false },

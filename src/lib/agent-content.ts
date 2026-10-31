@@ -31,6 +31,12 @@ export const homeMarkdown = (locale: Locale, site: URL): string => {
     `> ${t.meta.description}`,
     `Canonical: ${absolute(localePath(locale))}\nLanguage: ${info.htmlLang}\nSource repository: ${REPO_URL}\nLicense: AGPL-3.0-only`,
     t.hero.lede,
+    section(heading('team', t.team.title), [t.team.desc, bullets(t.team.feats)].join('\n\n')),
+    section(heading('modes', t.modes.title), [
+      t.modes.subtitle,
+      ...t.modes.items.map((mode) => `### ${mode.name}\n\n${mode.tagline}\n\n${mode.body}\n\n${mode.quote}`),
+    ].join('\n\n')),
+    section(heading('bot', t.bot.title), [t.bot.desc, bullets(t.bot.feats)].join('\n\n')),
     section(heading('harness', t.harness.title), [
       t.harness.desc,
       bullets(Object.values(t.harness.cells).map((cell) => `**${cell.title}**: ${cell.body}`)),
@@ -43,12 +49,6 @@ export const homeMarkdown = (locale: Locale, site: URL): string => {
       `### ${t.ready.byok.title}\n\n${t.ready.byok.body}`,
       [...t.ready.byok.protocols, ...t.ready.byok.local, t.ready.byok.any].join(' · '),
     ].join('\n\n')),
-    section(heading('modes', t.modes.title), [
-      t.modes.subtitle,
-      ...t.modes.items.map((mode) => `### ${mode.name}\n\n${mode.tagline}\n\n${mode.body}\n\n${mode.quote}`),
-    ].join('\n\n')),
-    section(heading('team', t.team.title), [t.team.desc, bullets(t.team.feats)].join('\n\n')),
-    section(heading('bot', t.bot.title), [t.bot.desc, bullets(t.bot.feats)].join('\n\n')),
     section(heading('extensions', t.ext.title), [
       t.ext.desc,
       bullets(t.ext.catalog.map((item) => `${item.name} (${item.kind})`)),

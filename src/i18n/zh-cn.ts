@@ -27,13 +27,13 @@ export const zhCN = {
     appleOnly: '仅支持 Apple 芯片',
   },
   hero: {
-    lede: '开源 AI Agent Harness，用自己的 API Key 完成编程、科研与办公任务。',
+    lede: '把任务交出去，看团队把它做完。开源，使用你自己的 API Key。',
     github: '在 GitHub 查看',
     docker: 'Docker 自托管',
     hint: '向下滚动',
   },
   harness: {
-    kicker: '01 · Harness',
+    kicker: '04 · Harness',
     title: '同一个模型，在 Varin 里走得更远。',
     desc: '中间是模型，周围每一格都是 Varin 为它准备的：工具、上下文、执行、协作与恢复。同一个模型放进来，能完成更长、更复杂的任务。',
     core: { title: '模型', body: '负责思考，可自由选择' },
@@ -59,7 +59,7 @@ export const zhCN = {
     },
   },
   ready: {
-    kicker: '02 · Ready, and yours',
+    kicker: '05 · Ready, and yours',
     title: '默认就好用，也能深度定制。',
     box: {
       title: '开箱即用',
@@ -96,7 +96,7 @@ export const zhCN = {
     },
   },
   modes: {
-    kicker: '03 · Four ways to work',
+    kicker: '02 · Four ways to work',
     title: '编程、科研、办公、日常，各有一套。',
     subtitle: '模式决定 Agent 先拿到哪些工具、有哪些队友协助。',
     items: [
@@ -123,10 +123,10 @@ export const zhCN = {
     ],
   },
   team: {
-    kicker: '04 · Team',
+    kicker: '01 · Team',
     title: '一个任务，几位\u00a0Agent 分头做。',
     desc: '主 Agent 先拆分任务，再分给队友：Worker 写实现，调研 Agent 查资料，验证 Agent 跑测试。每位成员有自己的名字、头像和对话，彼此可以直接发消息、交接代码，完成后向分配任务的 Agent 汇报。你可以在协作面板里查看它们的讨论，也可以随时插话。',
-    feats: ['成员并行推进，各有自己的对话', '彼此直接发消息，不必都经过你', '交接代码附带差异，可逐个文件查看', '完成后向分配任务的 Agent 汇报'],
+    feats: ['成员并行推进，各有自己的对话', '彼此直接发消息，不必都经过你', '交接代码附带差异，可逐个文件查看', '完成后向分配任务的 Agent 汇报', 'Codex、Claude Code、Pi 和支持 ACP 的程序也能接手派发的工作'],
     panel: { title: '协作', members: '主 Agent 与 3 位队友', composerBefore: '给', composerAfter: '发消息' },
     names: { main: '主 Agent', worker: 'Worker', retrieval: '调研 Agent', verifier: '验证 Agent', peer: '科研搭档' },
     feed: [
@@ -140,15 +140,16 @@ export const zhCN = {
     report: '汇报 · 已完成',
   },
   bot: {
-    kicker: '05 · Bots',
+    kicker: '03 · Bots',
     title: '长期在岗的 Bot。',
     desc: 'Bot 有自己的名字、性格、模型和工作目录，能同时推进好几件事，也可以为它分配电脑桌面。它记住的内容你都看得到，可以修正，也可以让它忘掉。让它睡眠，手头的工作会挂起；唤醒后从原处继续。',
-    feats: ['专属的名字、指令、模型与工作目录', '多项工作并行推进', '记忆可查看、可修正、可删除', '睡眠与唤醒，工作不丢失'],
+    feats: ['专属的名字、指令、模型与工作目录', '多项工作并行推进', '记忆可查看、可修正、可删除', '睡眠与唤醒，工作不丢失', '桌面端可选启用桌宠，在桌面上把 Bot 正在做的事演出来'],
+    video: 'Bot 工作台里 Varin 的舞台，回放一次按脚本编排的运行：她搜索、阅读，派出两位队友，收齐汇报后回复',
     states: { label: 'Bot 状态', awake: '在岗', sleep: '睡眠', wake: '唤醒' },
     profile: [
-      { label: '名字', value: '小满' },
+      { label: '名字', value: 'Varin' },
       { label: '模型', value: '跟随默认' },
-      { label: '工作目录', value: '~/bots/xiaoman' },
+      { label: '工作目录', value: '~/bots/varin' },
     ],
     works: [
       { title: '每周依赖巡检', awake: '进行中', ask: false },

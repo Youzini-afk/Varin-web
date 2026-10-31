@@ -32,13 +32,13 @@ export const fr: Copy = {
     appleOnly: 'puces Apple uniquement',
   },
   hero: {
-    lede: 'Un harness d’agents IA open source pour le code, la recherche et la bureautique, avec votre propre clé d’API.',
+    lede: 'Confiez la tâche, puis regardez l’équipe la mener à bien. Open source, avec votre propre clé d’API.',
     github: 'Voir sur GitHub',
     docker: 'Auto-hébergé avec Docker',
     hint: 'Défiler',
   },
   harness: {
-    kicker: '01 · Harness',
+    kicker: '04 · Harness',
     title: 'Le même modèle va plus loin dans Varin.',
     desc: 'Le modèle est au centre. Chaque cellule autour de lui est quelque chose que Varin prépare pour lui\u00a0: outils, contexte, exécution, collaboration et reprise. Placé ici, le même modèle mène à bien des tâches plus longues et plus complexes.',
     core: { title: 'Modèle', body: 'Il réfléchit. Vous choisissez lequel.' },
@@ -64,7 +64,7 @@ export const fr: Copy = {
     },
   },
   ready: {
-    kicker: '02 · Prêt, et à vous',
+    kicker: '05 · Prêt, et à vous',
     title: 'Bien réglé par défaut. Personnalisable en profondeur.',
     box: {
       title: 'Prêt à l’emploi',
@@ -101,7 +101,7 @@ export const fr: Copy = {
     },
   },
   modes: {
-    kicker: '03 · Quatre façons de travailler',
+    kicker: '02 · Quatre façons de travailler',
     title: 'Un mode pour le code, la recherche, la bureautique et le reste.',
     subtitle: 'Le mode détermine les outils dont l’agent dispose d’emblée et les coéquipiers qui l’aident.',
     items: [
@@ -128,10 +128,10 @@ export const fr: Copy = {
     ],
   },
   team: {
-    kicker: '04 · Équipe',
+    kicker: '01 · Équipe',
     title: 'Une tâche, répartie entre plusieurs agents.',
     desc: 'L’agent principal découpe la tâche et en confie les parties à ses coéquipiers\u00a0: un Worker écrit l’implémentation, l’agent de recherche rassemble le contexte, le vérificateur lance les tests. Chaque membre a son nom, son avatar et sa propre conversation. Ils s’écrivent directement, se transmettent du code et rendent compte à l’agent qui leur a confié le travail. Suivez leurs échanges dans le panneau de collaboration et intervenez quand vous voulez.',
-    feats: ['Les membres avancent en parallèle, chacun dans son fil', 'Ils s’écrivent directement, sans tout faire passer par vous', 'Les transferts de code arrivent avec leur diff, fichier par fichier', 'Chacun rend compte une fois le travail terminé'],
+    feats: ['Les membres avancent en parallèle, chacun dans son fil', 'Ils s’écrivent directement, sans tout faire passer par vous', 'Les transferts de code arrivent avec leur diff, fichier par fichier', 'Chacun rend compte une fois le travail terminé', 'Codex, Claude Code, Pi et les programmes compatibles ACP peuvent aussi prendre du travail confié'],
     panel: { title: 'Équipe', members: 'Agent principal et 3 coéquipiers', composerBefore: 'Écrire à', composerAfter: '' },
     names: { main: 'Agent principal', worker: 'Worker', retrieval: 'Agent de recherche', verifier: 'Vérificateur', peer: 'Partenaire de recherche' },
     feed: [
@@ -145,15 +145,16 @@ export const fr: Copy = {
     report: 'Rapport · Terminé',
   },
   bot: {
-    kicker: '05 · Bots',
+    kicker: '03 · Bots',
     title: 'Des bots qui restent en poste.',
     desc: 'Un bot a son propre nom, sa personnalité, son modèle et son dossier de travail, mène plusieurs tâches de front et peut se voir attribuer un bureau d’ordinateur. Vous voyez tout ce dont il se souvient, vous pouvez le corriger ou le lui faire oublier. Mettez-le en veille et son travail est suspendu\u00a0; réveillez-le et il reprend là où il s’était arrêté.',
-    feats: ['Son nom, ses instructions, son modèle et son dossier', 'Plusieurs tâches menées en parallèle', 'Une mémoire visible, corrigeable, effaçable', 'Veille et réveil sans perte de travail'],
+    feats: ['Son nom, ses instructions, son modèle et son dossier', 'Plusieurs tâches menées en parallèle', 'Une mémoire visible, corrigeable, effaçable', 'Veille et réveil sans perte de travail', 'Dans l’application de bureau, un compagnon de bureau facultatif mime le travail du bot'],
+    video: 'La scène de Varin dans l’espace Bot, qui rejoue une exécution scénarisée\u00a0: elle cherche, lit, envoie deux coéquipiers, recueille leurs comptes rendus et répond',
     states: { label: 'État du bot', awake: 'Actif', sleep: 'En veille', wake: 'Réveil' },
     profile: [
-      { label: 'Nom', value: 'Mallow' },
+      { label: 'Nom', value: 'Varin' },
       { label: 'Modèle', value: 'Par défaut' },
-      { label: 'Dossier', value: '~/bots/mallow' },
+      { label: 'Dossier', value: '~/bots/varin' },
     ],
     works: [
       { title: 'Contrôle hebdo des dépendances', awake: 'En cours', ask: false },
