@@ -1,5 +1,9 @@
 import { copyFor, LOCALES, localeInfo, localePath, type Locale } from '~/i18n';
-import { CHANGELOG_URL, DOCKER_GUIDE_URL, DOCS_URL, EXTENSION_EXAMPLES_URL, EXTENSION_GUIDE_URL, ISSUES_URL, LATEST_RELEASE_URL, LICENSE_URL, REPO_URL } from '~/site';
+import type { GuideSection } from '~/lib/docs';
+import {
+  CHANGELOG_URL, DOCKER_GUIDE_URL, DOCS_SOURCE_URL, DOCS_URL, EXTENSION_EXAMPLES_URL, EXTENSION_GUIDE_URL, ISSUES_URL, LATEST_RELEASE_URL,
+  LICENSE_URL, REPO_URL,
+} from '~/site';
 
 const bullets = (items: readonly string[]): string => items.map((item) => `- ${item}`).join('\n');
 const link = (label: string, url: string): string => `[${label}](${url})`;
@@ -12,7 +16,7 @@ export const homeMarkdown = (locale: Locale, site: URL): string => {
   const absolute = (path: string): string => new URL(path, site).href;
   const heading = (id: string, title: string): string => link(title, absolute(`${localePath(locale)}#${id}`));
   const resources = [
-    link(t.footer.links.docs, DOCS_URL[locale]),
+    link(t.footer.links.docs, absolute(DOCS_URL[locale])),
     link(t.footer.links.releases, LATEST_RELEASE_URL),
     link(t.footer.links.changelog, CHANGELOG_URL),
     link(t.footer.links.docker, DOCKER_GUIDE_URL),
@@ -67,26 +71,33 @@ export const homeMarkdown = (locale: Locale, site: URL): string => {
   ].join('\n\n');
 };
 
-/** Discovery stays short. Details live behind links, including native Markdown sources on GitHub. */
-export const agentIndex = (site: URL): string => {
+/** Root-relative links in the guides (/docs/install/) made absolute for documents read outside the site. */
+const absoluteLinks = (markdown: string, site: URL): string =>
+  markdown.replace(/\]\((\/[^)\s]*)/g, (_, target: string) => `](${new URL(target, site).href}`);
+
+/** Discovery stays short. Details live behind links: the localized overviews and the user guides. */
+export const agentIndex = (site: URL, guides: readonly GuideSection[]): string => {
   const absolute = (path: string): string => new URL(path, site).href;
   const raw = `${REPO_URL.replace('https://github.com/', 'https://raw.githubusercontent.com/')}/main`;
   return [
     '# Varin',
     `> ${copyFor('en').meta.description}`,
-    'This is the Varin product website. The localized Markdown overviews are generated from the same copy as the HTML homepages. Each overview identifies its canonical HTML URL and links to source sections. Release assets and technical instructions are maintained in the linked repository.',
+    'This is the Varin product website. The localized Markdown overviews are generated from the same copy as the HTML homepages. Each overview identifies its canonical HTML URL and links to source sections. The user guides are HTML pages rendered from the Markdown sources in the product repository. Release assets and technical instructions are maintained in the linked repository.',
     'Desktop downloads cover Windows, macOS and Linux. Docker self-hosting is documented separately. Varin uses your own API keys; the source code is licensed under AGPL-3.0-only.',
     '## Product overviews',
     bullets(LOCALES.map((info) => `${link(info.name, absolute(localePath(info.code, '/index.md')))}: Product overview in ${info.name}.`)),
     '## Documentation',
     bullets([
-      `${link('User guide', `${raw}/packages/docs/README.md`)}: Setup and usage; Markdown source.`,
-      `${link('简体中文使用文档', `${raw}/packages/docs/README.zh-CN.md`)}: Chinese setup and usage; Markdown source.`,
-      `${link('Documentation française', `${raw}/packages/docs/content/docs/fr/index.mdx`)}: French user guide; MDX source.`,
-      `${link('日本語ドキュメント', `${raw}/packages/docs/content/docs/ja/index.mdx`)}: Japanese user guide; MDX source.`,
+      ...LOCALES.map((info) => `${link(copyFor(info.code).footer.links.docs, absolute(DOCS_URL[info.code]))}: User guides in ${info.name}.`),
+      `${link('Guide sources', DOCS_SOURCE_URL)}: Markdown/MDX sources of the user guides in every language.`,
       `${link('Docker deployment', `${raw}/docs/ops/cloud-deployment.md`)}: Self-hosting instructions.`,
       `${link('Extension authoring', `${raw}/docs/ops/varin-extension-authoring.md`)}: Extension contracts, SDK and CLI.`,
     ]),
+    '## User guides',
+    guides.map((section) => [
+      `### ${section.label}`,
+      bullets(section.guides.map((guide) => `${link(guide.title, absolute(guide.path))}: ${guide.description}`)),
+    ].join('\n\n')).join('\n\n'),
     '## Project',
     bullets([
       `${link('Source repository', REPO_URL)}: Source code and README.`,
@@ -96,7 +107,7 @@ export const agentIndex = (site: URL): string => {
     ]),
     '## Optional',
     bullets([
-      `${link('Full English overview', absolute('/llms-full.txt'))}: All product overview sections in a single plain-text response.`,
+      `${link('Full English text', absolute('/llms-full.txt'))}: The product overview and every English user guide in a single plain-text response.`,
       `${link('Extension examples', EXTENSION_EXAMPLES_URL)}: Example extension source tree.`,
       `${link('Issue tracker', ISSUES_URL)}: Bug reports and feature requests.`,
       `${link('Sitemap', absolute('/sitemap.xml'))}: Canonical HTML pages and their language alternates.`,
@@ -104,3 +115,16 @@ export const agentIndex = (site: URL): string => {
     '',
   ].join('\n\n');
 };
+
+/** The English overview followed by every English user guide, for agents that read one document. */
+export const fullText = (site: URL, guides: readonly GuideSection[]): string => [
+  homeMarkdown('en', site).trimEnd(),
+  ...guides.flatMap((section) => section.guides.map((guide) => [
+    '---',
+    `# ${guide.title}`,
+    `> ${guide.description}`,
+    `Canonical: ${new URL(guide.path, site).href}\nSection: ${section.label}`,
+    absoluteLinks(guide.body.trim(), site),
+  ].join('\n\n'))),
+  '',
+].join('\n\n');

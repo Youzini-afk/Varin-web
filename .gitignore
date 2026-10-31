@@ -4,3 +4,6 @@ dist/
 .screens/
 *.log
 .DS_Store
+# Written by scripts/sync-docs.mjs from the product repository's packages/docs.
+src/content/docs/
+src/generated/

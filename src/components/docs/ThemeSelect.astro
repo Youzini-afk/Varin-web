@@ -1,0 +1,46 @@
+---
+// The homepage's appearance switch in place of Starlight's theme select.
+import ThemeSwitch from '~/components/ThemeSwitch.astro';
+import { docsLocale } from '~/lib/docs';
+---
+<ThemeSwitch locale={docsLocale(Astro.locals.starlightRoute)} />
+
+<script>
+  import { applyThemeChoice, THEME_STORAGE_KEY, type ThemeChoice } from '~/lib/theme';
+
+  const root = document.documentElement;
+  const prefersDark = matchMedia('(prefers-color-scheme: dark)');
+  const stored = (): ThemeChoice => {
+    try {
+      const value = localStorage.getItem(THEME_STORAGE_KEY);
+      return value === 'light' || value === 'dark' ? value : 'system';
+    } catch {
+      return 'system';
+    }
+  };
+  let choice = stored();
+
+  // Same storage as the homepage; Starlight additionally needs "system" resolved to light or dark.
+  const show = (): void => {
+    root.dataset.theme = choice === 'system' ? (prefersDark.matches ? 'dark' : 'light') : choice;
+    document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach((button) => {
+      button.setAttribute('aria-pressed', String(button.dataset.themeChoice === choice));
+    });
+  };
+  const select = (next: ThemeChoice): void => {
+    choice = next;
+    applyThemeChoice(next);
+    show();
+  };
+
+  show();
+  prefersDark.addEventListener('change', () => { if (choice === 'system') show(); });
+  document.querySelectorAll<HTMLButtonElement>('[data-theme-choice]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const next = button.dataset.themeChoice as ThemeChoice;
+      const doc = document as Document & { startViewTransition?: (update: () => void) => unknown };
+      if (doc.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches) doc.startViewTransition(() => select(next));
+      else select(next);
+    });
+  });
+</script>

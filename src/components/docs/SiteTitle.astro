@@ -1,0 +1,28 @@
+---
+// Starlight's site title, replaced by the homepage brand: the mark and name lead home, the section name to the guides.
+import Mark from '~/components/Mark.astro';
+import { copyFor, localePath } from '~/i18n';
+import { DOCS_PATH, docsLocale } from '~/lib/docs';
+
+const locale = docsLocale(Astro.locals.starlightRoute);
+const t = copyFor(locale).nav;
+---
+<div class="docs-title">
+  <a class="home" href={localePath(locale, '/')}>
+    <Mark class="docs-mark" />
+    <span translate="no">Varin</span>
+  </a>
+  <span class="slash" aria-hidden="true">/</span>
+  <a class="section" href={localePath(locale, DOCS_PATH)}>{t.docs}</a>
+</div>
+
+<style>
+  .docs-title { display: flex; align-items: center; gap: 10px; min-width: 0; white-space: nowrap; }
+  a { display: flex; align-items: center; color: var(--ink); text-decoration: none; }
+  .home { gap: 10px; font-size: 17px; font-weight: 600; letter-spacing: -0.02em; }
+  .home :global(.docs-mark) { width: 22px; height: 22px; flex: none; transition: transform var(--t-slow) var(--ease); }
+  .home:hover :global(.docs-mark) { transform: rotate(-90deg); }
+  .slash { color: var(--line); font-size: 18px; font-weight: 300; }
+  .section { font-size: 14.5px; font-weight: 500; color: var(--muted); transition: color var(--t-fast) var(--ease); }
+  .section:hover { color: var(--ink); }
+</style>

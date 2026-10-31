@@ -1,7 +1,7 @@
 // Checks published build artifacts without a browser, network access or optional dependencies.
 // Run after `bun run build`; an optional argument selects another Astro output directory.
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readdir, readFile, stat } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -19,9 +19,17 @@ const fileFor = (url) => {
 };
 
 const sitemap = await read('sitemap.xml');
-const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(([, url]) => decode(url));
+const entries = [...sitemap.matchAll(/<url>([\s\S]*?)<\/url>/g)].map(([, body]) => ({
+  loc: decode(body.match(/<loc>([^<]+)<\/loc>/)?.[1] ?? ''),
+  alternates: Object.fromEntries([...body.matchAll(/hreflang="([^"]+)" href="([^"]+)"/g)].map(([, lang, href]) => [lang, decode(href)])),
+}));
+const allUrls = entries.map((entry) => entry.loc);
+assert.equal(new Set(allUrls).size, allUrls.length, 'Sitemap URLs must be unique');
+const isHome = (url) => /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?$/.test(new URL(url).pathname);
+const urls = allUrls.filter(isHome);
+const guideEntries = entries.filter((entry) => !isHome(entry.loc));
 assert.equal(urls.length, 5, 'Sitemap must contain the five HTML homepages');
-assert.equal(new Set(urls).size, urls.length, 'Sitemap URLs must be unique');
+assert.ok(guideEntries.length >= 5 && guideEntries.length % 5 === 0, 'Sitemap must list every user guide in five languages');
 const home = urls.find((url) => new URL(url).pathname === '/');
 assert.ok(home, 'English homepage must be in the sitemap');
 const origin = new URL(home).origin;
@@ -99,9 +107,56 @@ for (const url of urls) {
   assert.equal((html.match(/<h1\b/g) ?? []).length, 1);
 }
 assert.equal(titles.size, urls.length, 'Each language must have its own title');
-assert.equal(await read('llms-full.txt'), await read('index.md'));
+
+// User guides: canonical, alternates matching the sitemap, search indexing and the shared preview image.
+for (const { loc: url, alternates } of guideEntries) {
+  assert.equal(new URL(url).origin, origin);
+  assert.match(new URL(url).pathname, /^\/(?:[a-z]{2}(?:-[a-z]{2})?\/)?docs\//, `Guide outside /docs/: ${url}`);
+  const html = await read(fileFor(url));
+  const links = tags(html, 'link');
+  const metas = tags(html, 'meta');
+  const meta = (name) => metas.find((tag) => tag.name === name || tag.property === name)?.content;
+  assert.deepEqual(links.filter((tag) => tag.rel === 'canonical').map((tag) => tag.href), [url]);
+  assert.equal(meta('og:url'), url);
+  assert.match(meta('robots') ?? '', /^index, follow/);
+  assert.ok(meta('description')?.length > 5, `Missing description: ${url}`);
+  assert.ok(decode(html.match(/<title>([^<]+)<\/title>/)?.[1] ?? '').includes('Varin'), `Title without Varin: ${url}`);
+  const found = Object.fromEntries(links.filter((tag) => tag.rel === 'alternate' && tag.hreflang).map((tag) => [tag.hreflang, tag.href]));
+  assert.deepEqual(found, alternates, `Alternates differ from the sitemap: ${url}`);
+  assert.equal(links.find((tag) => tag.rel === 'describedby')?.href, `${origin}/llms.txt`);
+  assert.equal(new URL(meta('og:image')).origin, origin);
+  assert.match(meta('og:locale') ?? '', /^[a-z]{2}_[A-Z]{2}$/);
+  assert.ok(html.includes('data-pagefind-body'), `Guide not indexed for search: ${url}`);
+  assert.equal((html.match(/<h1\b/g) ?? []).length, 1, `One h1 per guide: ${url}`);
+}
+
+// Every same-site link in the built HTML resolves to a built file.
+const builtFile = async (pathname) => {
+  for (const candidate of [pathname.endsWith('/') ? `${pathname}index.html` : pathname, `${pathname}/index.html`]) {
+    try { if ((await stat(path.join(out, decodeURIComponent(candidate)))).isFile()) return true; } catch { /* try the next form */ }
+  }
+  return false;
+};
+const htmlFiles = (await readdir(out, { recursive: true })).filter((file) => file.endsWith('.html'));
+let checkedLinks = 0;
+for (const file of htmlFiles) {
+  const html = await read(file);
+  for (const { href } of tags(html, 'a')) {
+    if (!href || href.startsWith('//') || !(href.startsWith('/') || href.startsWith(origin))) continue;
+    const pathname = new URL(href, origin).pathname;
+    assert.ok(await builtFile(pathname), `${file} links to a missing page: ${href}`);
+    checkedLinks += 1;
+  }
+}
+
+const full = await read('llms-full.txt');
+assert.ok(full.startsWith((await read('index.md')).trimEnd()), 'llms-full.txt must start with the English overview');
+for (const { loc } of guideEntries.filter((entry) => new URL(entry.loc).pathname.startsWith('/docs/'))) {
+  assert.ok(full.includes(`Canonical: ${loc}\n`), `llms-full.txt is missing ${loc}`);
+  assert.ok(guide.includes(`](${loc})`), `llms.txt is missing ${loc}`);
+}
 const notFound = await read('404.html');
 assert.equal(tags(notFound, 'meta').find((tag) => tag.name === 'robots')?.content, 'noindex, follow');
 assert.ok(!tags(notFound, 'link').some((tag) => tag.rel === 'canonical'));
 assert.ok(!sitemap.includes('404') && !sitemap.includes('.md') && !sitemap.includes('llms'));
-console.log(`SEO artifacts verified: ${urls.length} languages, sitemap/robots, JSON-LD, PNG previews, Markdown/llms links and Cloudflare headers (${origin}).`);
+console.log(`SEO artifacts verified: ${urls.length} languages, ${guideEntries.length} guide pages, ${checkedLinks} internal links, sitemap/robots, JSON-LD, PNG previews, Markdown/llms links and Cloudflare headers (${origin}).`);

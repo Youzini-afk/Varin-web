@@ -1,0 +1,8 @@
+---
+// The homepage's language menu: plain links to the same guide in each language, usable without JavaScript.
+import LanguageMenu from '~/components/LanguageMenu.astro';
+import { docsLocale, docsPath } from '~/lib/docs';
+
+const locale = docsLocale(Astro.locals.starlightRoute);
+---
+<LanguageMenu locale={locale} path={docsPath(Astro.url.pathname, locale)} />
